@@ -1,0 +1,15 @@
+{
+  "name": "picsous-angular-front",
+  "version": "1.0.0",
+  "description": "Front app for picsous",
+  "main": "Gruntfile.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@gitlab.utc.fr:picasso/picsous-angular-front.git"
+  },
+  "author": "picasso info",
+  "license": "UNLICENSED"
+}

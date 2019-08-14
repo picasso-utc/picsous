@@ -1,0 +1,130 @@
+<div class="row">
+	<div class="col-md-12">
+		<div class="page-header">
+			<h1>Analyse de la TVA<button class="btn btn-primary pull-right" ng-click="addingVatPeriod = !addingVatPeriod">Ajouter</button></h1>
+		</div>
+	</div>
+</div>
+<div class="row">
+	<div ng-class="{'col-sm-12': !analysisUndergoing && !analysisResult, 'col-sm-8': analysisUndergoing || analysisResult}">
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th>Début</th>
+					<th>Fin</th>
+					<th>État</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tr ng-repeat="period in periods">
+				<td>{{ period.debut | date }}</td>
+				<td>{{ period.fin | date }}</td>
+				<td><span ng-class="stateLabel(period.state)" class="label">{{ state(period.state) }}</span></td>
+				<td><button ng-click="analysis(period)" class="btn btn-xs btn-primary"><span ng-show="period.state === 'N'">Analyser</span><span ng-show="period.state === 'D'">Archives</span></button></td>
+			</tr>
+			<tr ng-if="addingVatPeriod">
+				<td>
+					<p class="input-group">
+						<input type="text" class="form-control" uib-datepicker-popup datepicker-options="dateOptions" close-text="Fermer" is-open="popupOpen1" ng-required="true" ng-model="newPeriod.debut" placeholder="AAAA-MM-JJ" />
+						<span class="input-group-btn">
+	            			<button type="button" class="btn btn-default" ng-click="openPopup1()"><i class="glyphicon glyphicon-calendar"></i></button>
+	          			</span>
+					</p>
+				</td>
+				<td>
+					<p class="input-group">
+						<input type="text" class="form-control" uib-datepicker-popup datepicker-options="dateOptions" close-text="Fermer" is-open="popupOpen2" ng-required="true" ng-model="newPeriod.fin" placeholder="AAAA-MM-JJ" />
+						<span class="input-group-btn">
+	            			<button type="button" class="btn btn-default" ng-click="openPopup2()"><i class="glyphicon glyphicon-calendar"></i></button>
+	          			</span>
+					</p>
+				</td>
+				<td colspan="2"><div align="center"><a href="" ng-click="addPeriod()" class="btn btn-primary btn-xs">Ajouter</a></div></td>
+			</tr>
+		</table>
+	</div>
+	<div class="col-sm-4" ng-show="analysisResult">
+		<table class="table table-striped table-bordered">
+			<tr>
+				<td colspan="2"><strong>TVA à déclarer</strong></td>
+			</tr>
+			<tr>
+				<td colspan="2">Calculée à partir des ventes PayUTC et des factures émises sur cette période.</td>
+			</tr>
+			<tr ng-repeat="tva_type in analysisResult.tva_a_declarer | orderBy:'pourcentage'" ng-if="tva_type.pourcentage !== 0">
+				<td>TVA à {{ tva_type.pourcentage }}%</td>
+				<td>{{ tva_type.montant.toFixed(2) }}€</td>
+			</tr>
+			<tr>
+				<td><strong>Total à déclarer</strong></td>
+				<td><strong>{{ analysisResult.tva_a_declarer_total.toFixed(2) }}€</strong></td>
+			</tr>
+		</table>
+		<table class="table table-striped table-bordered">
+			<tr>
+				<td><strong>TVA déductible</strong></td>
+				<td><strong>{{ analysisResult.tva_deductible.toFixed(2) }}€</strong></td>
+			</tr>
+			<tr>
+				<td colspan="2">Calculée à partir des factures reçues sur cette période.</td>
+			</tr>
+		</table>
+		<button class="btn btn-primary btn-block" ng-show="analyzedPeriod.state === 'N'" ng-click="considerDeclared(analyzedPeriod)">Considérer comme déclarée</button>
+	</div>
+	<DIV class="col-sm-4" ng-show="analysisUndergoing">
+		<div class="spinner" id="vat-spinner">
+			<div class="dot1" id="vat-spinner-dot1"></div>
+			<div class="dot2" id="vat-spinner-dot2"></div>
+		</div>
+	</DIV>
+</div>
+<style>
+#vat-spinner {
+  margin: 100px auto;
+  width: 40px;
+  height: 40px;
+  position: relative;
+  text-align: center;
+  
+  -webkit-animation: sk-rotate 2.0s infinite linear;
+  animation: sk-rotate 2.0s infinite linear;
+}
+
+#vat-spinner-dot1, #vat-spinner-dot2 {
+  width: 60%;
+  height: 60%;
+  display: inline-block;
+  position: absolute;
+  top: 0;
+  background-color: #333;
+  border-radius: 100%;
+  
+  -webkit-animation: sk-bounce 2.0s infinite ease-in-out;
+  animation: sk-bounce 2.0s infinite ease-in-out;
+}
+
+#vat-spinner-dot2 {
+  top: auto;
+  bottom: 0;
+  -webkit-animation-delay: -1.0s;
+  animation-delay: -1.0s;
+}
+
+@-webkit-keyframes sk-rotate { 100% { -webkit-transform: rotate(360deg) }}
+@keyframes sk-rotate { 100% { transform: rotate(360deg); -webkit-transform: rotate(360deg) }}
+
+@-webkit-keyframes sk-bounce {
+  0%, 100% { -webkit-transform: scale(0.0) }
+  50% { -webkit-transform: scale(1.0) }
+}
+
+@keyframes sk-bounce {
+  0%, 100% { 
+    transform: scale(0.0);
+    -webkit-transform: scale(0.0);
+  } 50% { 
+    transform: scale(1.0);
+    -webkit-transform: scale(1.0);
+  }
+}
+</style>

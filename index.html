@@ -1,0 +1,110 @@
+<!doctype html>
+<html>
+	<head>
+		<title>Picsous</title>
+		<meta charset="utf-8" />
+		<link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="bower_components/ng-table/dist/ng-table.min.css" />
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="styles/style.css" />
+		<link rel="icon" type="images/png" href="styles/logo.png">
+	</head>
+	<body ng-app="picsousApp">
+		<nav class="navbar navbar-default" ng-controller="NavCtrl">
+		  <div class="container-fluid">
+		    <!-- Brand and toggle get grouped for better mobile display -->
+		    <div class="navbar-header">
+		      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+		        <span class="sr-only">Toggle navigation</span>
+		        <span class="icon-bar"></span>
+		        <span class="icon-bar"></span>
+		        <span class="icon-bar"></span>
+		      </button>
+		      <a class="navbar-brand" href="#/">Picsous</a>
+		    </div>
+
+		    <!-- Collect the nav links, forms, and other content for toggling -->
+		    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+		      <ul class="nav navbar-nav">
+		        <li ng-if="cas.isAdmin()"><a href="#/allperms"><i class="fa fa-fw fa-list"></i> Perms</a></li>
+		        <li ng-if="cas.isAdmin()" class="dropdown">
+		          <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Factures <span class="caret"></span></a>
+		          <ul class="dropdown-menu">
+								<li class="dropdown-header"> Factures</li>
+		            <li><a href="#/facturesemises"><i class="fa fa-fw fa-upload"></i> Factures émises</a></li>
+		            <li><a href="#/facturesrecues"><i class="fa fa-fw fa-download"></i> Factures reçues</a></li>
+								<!-- <li><a href="#/stats"><i class="fa fa-fw fa-area-chart"></i> Statistiques</a></li> -->
+								<li class="dropdown-header"> Chèques</li>
+		            <li><a href="#/cheques"><i class="fa fa-fw fa-money"></i> Chèques</a></li>
+		          </ul>
+		        </li>
+		        <li ng-if="cas.isAdmin()"><a href="#/analyse"><i class="fa fa-fw fa-bank"></i> Analyse TVA</a></li>
+				<li ng-if="cas.isAdmin()"><a href="#/bank"><i class="fa fa-fw fa-bank"></i> Banque</a></li>
+				<li ng-if="cas.isAdmin()"><a href="#/backoffice"><i class="fa fa-fw fa-gears"></i> Administration</a></li>
+		      </ul>
+		      <ul class="nav navbar-nav navbar-right">
+						<li ng-if="cas.isAdmin()" class="dropdown">
+							<a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ semesterText() }} <span class="caret"></span></a>
+							<ul class="dropdown-menu">
+								<li><a href="" ng-click="showAllSemesters()">Archives complètes</a></li>
+								<li><a href="" ng-click="resetSemester()" ng-if="semester()">Quitter les archives</a></li>
+								<li class="dropdown-header">Archives par semestre</li>
+								<li ng-repeat="semester in getSemesters()"><a href="" ng-click="setSemester(semester)">{{ semesterName(semester) }}</a></li>
+							</ul>
+						</li>
+						<li><a href="" ng-click="superadmin.removeSuperadmin()" ng-if="cas.isAdmin() && superadmin.isActive()"><i class="fa fa-fw fa-check"></i> Retour mode normal</a></li>
+						<li><a href="" ng-click="superadmin.setSuperadmin()" ng-if="cas.isAdmin() && !superadmin.isActive() && superadmin.isShowable()"><i class="fa fa-fw fa-warning"></i> Activer mode admin</a></li>
+		      	<li><a ng-click="logout()" ng-if="cas.isConnected()"><i class="fa fa-fw fa-power-off"></i> Déconnexion</a></li>
+		        <li id="loading-spinner" style="display: none;">
+			        <div class="spinner spinner-navbar">
+					  <div class="bounce1"></div>
+					  <div class="bounce2"></div>
+					  <div class="bounce3"></div>
+					</div>
+				</li>
+		      </ul>
+		    </div><!-- /.navbar-collapse -->
+		  </div><!-- /.container-fluid -->
+		</nav>
+		<div class="container-fluid" ng-view>
+		</div>
+	</body>
+	<script src="bower_components/jquery/dist/jquery.min.js"></script>
+	<script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+	<script src="bower_components/remarkable-bootstrap-notify/bootstrap-notify.min.js"></script>
+	<script src="bower_components/angular/angular.min.js"></script>
+	<script src="bower_components/angular-animate/angular-animate.min.js"></script>
+	<script src="bower_components/angular-bootstrap/ui-bootstrap.min.js"></script>
+	<script src="bower_components/angular-route/angular-route.min.js"></script>
+	<script src="bower_components/ng-table/dist/ng-table.min.js"></script>
+	<script src="bower_components/angular-local-storage/dist/angular-local-storage.min.js"></script>
+	<script src="bower_components/angular-ui-mask/dist/mask.min.js"></script>
+	<script src="/bower_components/angular-cookies/angular-cookies.js"></script>
+
+	<script src="app/app.js"></script>
+	<script src="app/config.js"></script>
+	<script src="app/controllers/home.js"></script>
+	<script src="app/controllers/allperms.js"></script>
+	<script src="app/controllers/backoffice.js"></script>
+	<script src="app/controllers/bank.js"></script>
+	<script src="app/controllers/cheques.js"></script>
+	<script src="app/controllers/nav.js"></script>
+	<script src="app/controllers/perm.js"></script>
+	<script src="app/controllers/factureemise.js"></script>
+	<script src="app/controllers/facturerecue.js"></script>
+	<script src="app/controllers/facturesemises.js"></script>
+	<script src="app/controllers/facturesrecues.js"></script>
+	<script src="app/controllers/vatanalysis.js"></script>
+	<script src="app/controllers/stats.js"></script>
+	<script src="app/directives/dateselector.js"></script>
+	<script src="app/services/tva.js"></script>
+	<script src="app/services/semester.js"></script>
+	<script src="app/services/token.js"></script>
+	<script src="app/services/message.js"></script>
+	<script src="app/services/dateWrapper.js"></script>
+	<script src="app/services/loadingspin.js"></script>
+	<script src="app/services/casconnectioncheck.js"></script>
+	<script src="app/services/objectStates.js"></script>
+	<script src="app/services/serverGetter.js"></script>
+	<script src="app/services/superadmin.js"></script>
+</html>

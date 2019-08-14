@@ -1,0 +1,58 @@
+<div class="row">
+	<div class="col-md-12">
+		<div class="page-header">
+			<h1>Perms</h1>
+		</div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-10 col-md-offset-1">
+		<div class="row">
+			<div class="col-md-5">
+				<p class="input-group">
+					<span class="input-group-addon">Recherche</span>
+					<input type="text" class="form-control" ng-model="filters.searchField" />
+				</p>
+			</p>
+		</div>
+		<div class="row">
+			<div class="col-md-2 col-sm-4">
+				<div class="checkbox">
+					<label><input type="checkbox" ng-model="filters.traite" /> Perms traitées</label>
+				</div>
+			</div>
+			<div class="col-md-2 col-sm-4">
+				<div class="checkbox">
+					<label><input type="checkbox" ng-model="filters.nontraite" /> Perms non traitées</label>
+				</div>
+			</div>
+			<div class="col-md-2 col-sm-4">
+				<div class="checkbox">
+					<label><input type="checkbox" ng-model="filters.sansfacture" /> Perms sans facture</label>
+				</div>
+			</div>
+		</div>
+		<table ng-show="loaded" class="table table-striped">
+			<thead>
+				<tr>
+					<th>Nom</th>
+					<th>Date</th>
+					<th>Période</th>
+					<th>Type</th>
+					<th>Responsable</th>
+					<th>État</th>
+				</tr>
+			</thead>
+			<!-- <tr ng-repeat="perm in perms | orderBy:'date':true | filter:filters.searchField"> -->
+			<tr ng-repeat="perm in getPerms(filters) | orderBy:'date':true | filter:filters.searchField">
+				<td><a href="#/perm/{{perm.id}}">{{ perm.perm.nom }}</a></td>
+				<td>{{ perm.date | date }}</td>
+				<td>{{ perm.creneau === 'S' ? 'Soir' : (perm.creneau === 'M' ? 'Matin' : 'Déjeuner') }}</td>
+				<td>{{ perm.perm.asso ? 'Association' : 'Groupe de potes' }}</td>
+				<td><a href="mailto:{{perm.perm.mail_resp}}">{{ perm.perm.nom_resp }}</a></td>
+				<td><span class="label" ng-class="stateLabel(perm.state)">{{ stateString(perm.state) }}</span></td>
+			</tr>
+		</table>
+		<p ng-hide="loaded">Chargement en cours...</p>
+	</div>
+</div>

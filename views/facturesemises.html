@@ -1,0 +1,99 @@
+<div class="row">
+	<div class="col-md-12">
+		<div class="page-header">
+			<h1>Factures émises<button class="btn btn-primary pull-right" ng-click="addingFacture = !addingFacture"><i class="fa fa-plus"></i> Ajouter</button></h1>
+		</div>
+	</div>
+</div>
+<div class="row" ng-show="addingFacture">
+	<div class="col-md-12">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				Ajouter une facture
+			</div>
+			<div class="panel-body">
+				<p>Ajouter une facture émise au nom du Pic'Asso pour un destinataire qui lui est redevable.</p>
+				<hr>
+				<form>
+					<div class="row">
+						<div class="form-group col-md-4">
+							<label>Destinataire</label>
+							<input type="text" class="form-control" ng-model="newFacture.destinataire" />
+						</div>
+						<div class="form-group col-md-4">
+							<label>Créateur</label>
+							<input type="text" class="form-control" ng-model="newFacture.nom_createur" />
+						</div>
+						<div class="form-group col-md-4">
+							<label>Etat</label>
+							<select ng-model="newFacture.etat" class="form-control">
+								<option value="D">Dûe</option>
+								<option value="A">Annulée</option>
+								<option value="T">Partiellement payée</option>
+								<option value="P">Payée</option>
+							</select>
+						</div>
+						<div class="form-group col-md-3">
+							<label>Date dûe</label>
+							<input type="text" ng-model="newFacture.date_due" class="form-control" placeholder="AAAA-MM-JJ" />
+						</div>
+						<div class="form-group col-md-3">
+							<label>Date de paiement</label>
+							<input type="text" ng-model="newFacture.date_paiement" class="form-control" placeholder="AAAA-MM-JJ" />
+						</div>
+					</div>
+					<h3>Éléments</h3>
+					<table class="table table-striped">
+						<thead>
+							<tr>
+								<th>Nom</th>
+								<th>Prix TTC</th>
+								<th>TVA (%)</th>
+								<th>Quantité</th>
+								<th><button ng-click="addFactureRow()" class="btn btn-primary fa fa-plus"></button></th>
+							</tr>
+						</thead>
+						<tr ng-repeat="row in newFactureRows">
+							<td><input type="text" class="form-control" ng-model="row.nom" /></td>
+							<td><input type="text" class="form-control" ng-model="row.prix" /></td>
+							<td><input type="text" class="form-control" ng-model="row.tva" /></td>
+							<td><input type="number" class="form-control" ng-model="row.qty" /></td>
+							<td><a href="" ng-click="deleteFactureRow($index)">Supprimer</a></td>
+						</tr>
+					</table>
+					<button class="btn btn-primary pull-right" ng-click="sendFacture()">Ajouter</button>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-12">
+		<div class="row">
+			<div class="col-md-5">
+				<p class="input-group">
+					<span class="input-group-addon">Recherche</span>
+					<input type="text" class="form-control" ng-model="searchField" />
+				</p>
+			</p>
+		</div>
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th>Destinataire</th>
+					<th>Date de création</th>
+					<th>Etat</th>
+					<th>Créateur</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tr ng-repeat="facture in factures | filter:searchField">
+				<td>{{ facture.destinataire }}</td>
+				<td>{{ facture.date_creation | date }}</td>
+				<td><span class="label" ng-class="stateLabel(facture.etat)">{{ state(facture.etat) }}</span></td>
+				<td>{{ facture.nom_createur }}</td>
+				<td><a href="#/factureemise/{{facture.id}}">Détails</a></td>
+			</tr>
+		</table>
+	</div>
+</div>

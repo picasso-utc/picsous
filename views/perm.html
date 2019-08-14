@@ -1,0 +1,271 @@
+<div class="row">
+	<div class="col-md-12">
+		<div class="page-header">
+			<h1>
+				<a href="#/allperms">Perms</a> > {{ perm.nom }}
+				<span class="pull-right">
+					<!-- <button ng-click="modifyPerm()" ng-hide="modifyingPerm" class="btn btn-primary">Modifier</button>  -->
+					<button ng-hide="modifyingPerm || !isAdmin()" class="btn btn-success" ng-click="totalSales()">Obtenir les ventes</button>
+					<button ng-click="savePerm()" ng-show="modifyingPerm" class="btn btn-primary">Sauvegarder</button> 
+					<button class="btn btn-danger" ng-show="modifyingPerm" ng-click="cancelModifyPerm()">Annuler</button>
+				</span>
+			</h1>
+		</div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-12">
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th>Nom</th>
+					<th>Date</th>
+					<th>Période</th>
+					<th>Asso</th>
+					<th>Responsable</th>
+					<th ng-show="modifyingPerm">Mail</th>
+					<th ng-if="!modifyingPerm">État</th>
+					<th ng-if="modifyingPerm">Traitée</th>
+				</tr>
+			</thead>
+			<tr ng-if="!modifyingPerm">
+				<td>{{ perm.perm.nom }}</td>
+				<td>{{ perm.date | date }}</td>
+				<td>{{ perm.creneau === 'S' ? 'Soir' : (perm.creneau === 'M' ? 'Matin' : 'Déjeuner') }}</td>
+				<td>{{ perm.perm.asso ? 'Association' : 'Groupe de potes' }}</td>
+				<td><a href="mailto:{{perm.perm.mail_resp}}">{{ perm.perm.nom_resp }}</a> ({{perm.perm.mail_resp}})</td>
+				<td><span ng-class="stateLabel(perm.state)" class="label">{{ stateString(perm.state) }}</span></td>
+			</tr>
+<!-- 			<tr ng-if="modifyingPerm">
+				<td><input type="text" class="form-control" ng-model="perm.perm.nom" /></td>
+				<td><input type="text" class="form-control" ng-model="perm.date" /></td>
+				<td>
+					<select ng-model="perm.creneau" class="form-control">
+						<option value="M">Matin</option>
+						<option value="D">Déjeuner</option>
+						<option value="S">Soir</option>
+					</select>
+				</td>
+				<td><input type="checkbox" ng-model="perm.perm.asso" /></td>
+				<td><input type="text" class="form-control" ng-model="perm.perm.nom_resp" /></td>
+				<td><input type="text" class="form-control" ng-model="perm.perm.mail_resp" /></td>
+				<td><input type="checkbox" ng-model="perm.traitee" /></td>
+			</tr> -->
+		</table>
+	</div>
+</div>
+<div class="panel panel-default" ng-show="salesInfo">
+	<div class="panel-heading">
+		Total des ventes
+	</div>
+	<div class="panel-body">
+		<ul>
+			<li><strong>Ventes HT</strong> : {{ salesInfo.total_ht }} €</li>
+			<li><strong>Ventes TTC</strong> : {{ salesInfo.total_ttc }} €</li>
+		</ul>
+	</div>
+</div>
+<div class="row" ng-show="perm.perm.asso">
+	<div class="col-sm-6" style="margin-top:10px;">
+		<a href="{{ app_url + '/convention/' + perm.id }}" class="btn btn-block btn-lg btn-primary" target="_blank">Afficher convention</a>
+		<a href="" ng-click="sendConvention()" class="btn btn-block btn-success">Envoyer convention par mail</a>
+	</div>
+	<div class="col-sm-6" style="margin-top:10px;">
+		<a href="{{ app_url + '/justificatif/' + perm.id }}" class="btn btn-block btn-lg btn-primary" target="_blank">Afficher justificatif de paiement</a>
+		<a href="" ng-click="sendJustificatif()" class="btn btn-block btn-success">Envoyer justificatif par mail</a>
+	</div>
+</div>
+<div class="row" ng-show="isAdmin()">
+	<div class="col-md-12">
+		<h3>Factures<button class="pull-right btn btn-primary" ng-click="addingFacture = !addingFacture"><i class="fa fa-plus"></i> Ajouter</button></h3>
+	</div>
+</div>
+<div class="row" ng-show="isAdmin()">
+	<div class="col-md-12">
+		<div class="panel panel-default" ng-show="addingFacture">
+			<div class="panel-heading">
+				Ajout de facture
+			</div>
+			<div class="panel-body">
+				<form>
+					<div class="row">
+						<div class="form-group col-md-3">
+							<label>Vendeur</label>
+							<input type="text" class="form-control" ng-model="newFacture.nom_entreprise" />
+						</div>
+						<div class="form-group col-md-3">
+							<label>Personne à rembourser</label>
+							<input type="text" class="form-control" ng-model="newFacture.personne_a_rembourser" />
+						</div>
+						<div class="form-group col-md-2">
+							<label>Prix TTC (€)</label>
+							<input type="text" class="form-control" ng-model="newFacture.prix" />
+						</div>
+						<div class="form-group col-md-2">
+							<label>TVA (€)</label>
+							<input type="text" class="form-control" ng-model="newFacture.tva_complete" />
+						</div>
+						<div class="form-group col-md-2">
+							<label>Moyen de paiement</label>
+							<input type="text" class="form-control" ng-model="newFacture.moyen_paiement" />
+						</div>
+						<div class="form-group col-md-2">
+							<label>Date</label>
+							<p class="input-group">
+								<input type="text" class="form-control" uib-datepicker-popup datepicker-options="dateOptions" close-text="Fermer" is-open="popup1Open" ng-required="true" ng-model="newFacture.date" />
+								<span class="input-group-btn">
+		            				<button type="button" class="btn btn-default" ng-click="openPopup(1)"><i class="glyphicon glyphicon-calendar"></i></button>
+		          				</span>
+		          			</p>
+						</div>
+						<div class="form-group col-md-2">
+							<label>Date de paiement</label>
+							<p class="input-group">
+								<input type="text" class="form-control" uib-datepicker-popup datepicker-options="dateOptions" close-text="Fermer" is-open="popup2Open" ng-model="newFacture.date_paiement" />
+								<span class="input-group-btn">
+		            				<button type="button" class="btn btn-default" ng-click="openPopup(2)"><i class="glyphicon glyphicon-calendar"></i></button>
+		          				</span>
+		          			</p>
+						</div>
+						<div class="form-group col-md-2">
+							<label>Date de remboursement</label>
+							<p class="input-group">
+								<input type="text" class="form-control" uib-datepicker-popup datepicker-options="dateOptions" close-text="Fermer" is-open="popup3Open" ng-model="newFacture.date_remboursement" />
+								<span class="input-group-btn">
+		            				<button type="button" class="btn btn-default" ng-click="openPopup(3)"><i class="glyphicon glyphicon-calendar"></i></button>
+		          				</span>
+		          			</p>
+						</div>
+						<div class="form-group col-md-3">
+							<label>Catégorie <span ng-show="isAdmin()">(<a href="#/facturesrecues">+</a>)</span></label>
+							<select class="form-control" ng-model="newFacture.categorie" ng-options="category.id as category.nom for category in categories">
+							</select>
+						</div>
+						<div class="form-group col-md-3">
+							<label>État</label>
+							<select class="form-control" ng-model="newFacture.etat">
+								<option value="D">À payer</option>
+								<option value="R">À rembourser</option>
+								<option value="E">En attente</option>
+								<option value="P">Payée</option>
+							</select>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-12">
+							<label>Remarque</label>
+							<textarea class="form-control" rows="3" style="margin-bottom:5px;" ng-model="newFacture.remarque"></textarea>
+						</div>
+						<div class="col-md-12">
+							<div class="form-group">
+								<input type="checkbox" ng-model="newFacture.immobilisation" />
+								<label>Immobilisation</label>
+							</div>
+						</div>
+						<div class="col-md-12">
+							<button class="pull-right btn btn-primary" ng-click="addFacture()">Ajouter</button>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+		<table class="table table-striped" ng-show="perm.facturerecue_set.length > 0">
+			<thead>
+				<tr>
+					<th>Réf.</th>
+					<th>Entreprise</th>
+					<th>Date</th>
+					<th>Date paiement</th>
+					<th>Date remboursement</th>
+					<th>Prix TTC</th>
+					<th>TVA</th>
+					<th>État</th>
+					<th>Personne à rembourser</th>
+					<th>Moyen de paiement</th>
+				</tr>
+			</thead>
+			<tr ng-repeat="facture in perm.facturerecue_set">
+				<td><a href="#/facturesrecues/{{facture.id}}">{{ getCategoryCode(facture.categorie) + facture.id }}</a></td>
+				<td>{{ facture.nom_entreprise }}</td>
+				<td>{{ facture.date | date }}</td>
+				<td>{{ facture.date_paiement | date }}</td>
+				<td>{{ (facture.date_remboursement | date) || '--' }}</td>
+				<td>{{ facture.prix }} €</td>
+				<td>{{ facture.prix * (facture.tva / 100) }} €</td>
+				<td><span class="label" ng-class="factureRecueStateLabel(facture.etat)">{{ factureRecueState(facture.etat) }}</span></td>
+				<td>{{ (facture.personne_a_rembourser) || '--' }}</td>
+				<td>{{ facture.moyen_paiement }}</td>
+			</tr>
+		</table>
+		<p ng-show="perm.facturerecue_set.length === 0">Aucune facture liée à cette perm.</p>
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-12">
+		<h3>Articles<button class="pull-right btn btn-primary" ng-click="createArticle = !createArticle"><i class="fa fa-plus"></i> Ajouter</button></h3>
+	</div>
+</div>
+<div class="row" ng-show="createArticle">
+	<div class="col-md-12">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				Ajouter un article
+			</div>
+			<div class="panel-body">
+				<div class="row">
+					<form>
+						<div class="form-group col-md-5">
+							<label>Nom</label>
+							<input type="text" class="form-control" ng-model="newArticle.nom">
+						</div>
+						<div class="form-group col-md-1">
+							<label>Prix TTC</label>
+							<input type="number" class="form-control" ng-model="newArticle.prix">
+						</div>
+						<div class="form-group col-md-1">
+							<label>TVA (%)</label>
+							<input type="number" class="form-control" ng-model="newArticle.tva" disabled>
+						</div>
+						<div class="form-group col-md-2">
+							<label>Stock</label>
+							<input type="number" class="form-control" ng-model="newArticle.stock">
+						</div>
+					</form>
+				</div>
+				<button ng-click="addArticle()" ng-disabled="addingArticle" class="btn btn-primary pull-right btn-lg">Ajouter</button>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-12">
+		<table class="table table-striped" ng-show="perm.article_set.length > 0">
+			<thead>
+				<tr>
+					<th>Nom</th>
+					<th>Prix TTC</th>
+					<th>TVA</th>
+					<th colspan="2">Ventes</th>
+					<th>PayUTC</th>
+					<th>Modifier</th>
+				</tr>
+			</thead>
+			<tr ng-repeat="article in perm.article_set">
+				<td ng-hide="article.simpleModifying">{{ article.nom }}</td>
+				<td ng-show="article.simpleModifying"><input type="text" class="form-control" ng-model="article.nom"></td>
+				<td ng-hide="article.simpleModifying">{{ article.prix }} €</td>
+				<td ng-show="article.simpleModifying"><input type="text" class="form-control" ng-model="article.prix"></td>
+				<td ng-hide="article.simpleModifying">{{ article.tva }}%</td>
+				<td ng-show="article.simpleModifying"><input type="text" class="form-control" ng-model="article.tva"></td>
+				<td ng-hide="article.hardModifying">{{ article.ventes }} / {{article.stock}}</td>
+				<td colspan="2" ng-show="article.hardModifying"><input type="text" class="form-control" ng-model="article.ventes"></td>
+				<td ng-hide="article.hardModifying"><button ng-click="updateArticle(article)" class="btn btn-primary btn-xs" ng-disabled="!article.id_payutc">Mettre à jour</button> <span ng-show="article.ventes_last_update">(Mis à jour le {{ article.ventes_last_update | date }})</span></td>
+				<td ng-hide="article.hardModifying">{{ article.id_payutc ? 'Ajouté' : '' }}<button ng-click="addToPayutc(article)" class="btn btn-primary btn-xs" ng-hide="article.id_payutc" ng-disabled="article.addingToPayutc">Ajouter à PayUTC</button></td>
+				<td ng-show="article.hardModifying"><input type="text" class="form-control" ng-model="article.id_payutc"></td>
+				<td ng-hide="article.simpleModifying"><button class="btn btn-success btn-xs" ng-disabled="article.id_payutc" ng-click="simpleModification(article)">Modifier</button> <button ng-show="superadmin.access()" class="btn btn-warning btn-xs" ng-click="hardModification(article)"><i class="fa fa-fw fa-warning"></i> Forcer modifications</button></td>
+				<td ng-show="article.simpleModifying"><button class="btn btn-xs btn-primary" ng-click="savingArticle(article, article.hardModifying)">Sauvegarder</button> <button class="btn btn-xs btn-danger" ng-click="cancelSavingArticle(article)">Annuler</button></td>
+			</tr>
+		</table>
+		<p ng-show="perm.article_set.length === 0">Aucun article lié à cette perm.</p>
+	</div>
+</div>

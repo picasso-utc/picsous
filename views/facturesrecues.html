@@ -1,0 +1,221 @@
+<div class="row">
+	<div class="col-md-12">
+		<div class="page-header">
+			<h1>Factures reçues
+				<span class="pull-right">
+					<button class="btn btn-primary" ng-click="addingFacture = !addingFacture">Ajouter</button> <button ng-click="editingCategories = !editingCategories" class="btn btn-success">Catégories</button>
+				</span>
+			</h1>
+		</div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-12">
+		<div class="panel panel-default" ng-show="editingCategories">
+			<div class="panel-heading">
+				Gestion des catégories
+			</div>
+			<div class="panel-body">
+				<div class="row">
+					<div class="col-md-12">
+						<select ng-options="category as category.nom for category in categories" class="form-control" ng-model="editingCategory">
+						</select>
+						<form style="margin-top:8px" class="form-inline" ng-show="editingCategory">
+							<div class="form-group">
+								<label>Nom</label>
+								<input type="text" class="form-control" ng-model="editingCategory.nom" />
+							</div>
+							<div class="form-group">
+								<label>Code</label>
+								<input type="text" class="form-control" ng-model="editingCategory.code" />
+							</div>
+							<button class="btn btn-primary" ng-click="editCategory()">Modifier</button> <button ng-click="deleteCategory()" class="btn btn-danger">Supprimer</button>
+						</form>
+					</div>
+				</div>
+				<hr>
+				<div class="row">
+					<div class="col-md-12">
+						<form class="form-inline">
+							<div class="form-group">
+								<label>Nom</label>
+								<input type="text" class="form-control" ng-model="newCategory.nom" placeholder="Bières" />
+							</div>
+							<div class="form-group">
+								<label>Code</label>
+								<input type="text" class="form-control" ng-model="newCategory.code" placeholder="B" />
+							</div>
+							<button class="btn btn-primary" ng-click="addCategory()">Ajouter</button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-12">
+		<div class="panel panel-default" ng-show="addingFacture">
+			<div class="panel-heading">
+				Ajout de facture
+			</div>
+			<div class="panel-body">
+				<form>
+					<div class="row">
+						<div class="form-group col-md-3">
+							<label>Destinataire</label>
+							<input type="text" class="form-control" ng-model="newFacture.nom_entreprise" />
+						</div>
+						<div class="form-group col-md-3">
+							<label>Personne à rembourser</label>
+							<input type="text" class="form-control" ng-model="newFacture.personne_a_rembourser" />
+						</div>
+						<div class="form-group col-md-2">
+							<label>Prix TTC (€)</label>
+							<input type="text" class="form-control" ng-model="newFacture.prix" />
+						</div>
+						<div class="form-group col-md-2">
+							<label>TVA (€)</label>
+							<input type="text" class="form-control" ng-model="newFacture.tva_complete" />
+						</div>
+						<div class="form-group col-md-2">
+							<label>Moyen de paiement</label>
+							<input type="text" class="form-control" ng-model="newFacture.moyen_paiement" />
+						</div>
+						<div class="form-group col-md-2">
+							<label>Date</label>
+							<p class="input-group">
+								<input type="text" class="form-control" uib-datepicker-popup datepicker-options="dateOptions" close-text="Fermer" is-open="popup1Open" ng-required="true" ng-model="newFacture.date" />
+								<span class="input-group-btn">
+		            				<button type="button" class="btn btn-default" ng-click="openPopup(1)"><i class="glyphicon glyphicon-calendar"></i></button>
+		          				</span>
+		          			</p>
+						</div>
+						<div class="form-group col-md-2">
+							<label>Date de paiement</label>
+							<p class="input-group">
+								<input type="text" class="form-control" uib-datepicker-popup datepicker-options="dateOptions" close-text="Fermer" is-open="popup2Open" ng-model="newFacture.date_paiement" />
+								<span class="input-group-btn">
+		            				<button type="button" class="btn btn-default" ng-click="openPopup(2)"><i class="glyphicon glyphicon-calendar"></i></button>
+		          				</span>
+		          			</p>
+						</div>
+						<div class="form-group col-md-2">
+							<label>Date de remboursement</label>
+							<p class="input-group">
+								<input type="text" class="form-control" uib-datepicker-popup datepicker-options="dateOptions" close-text="Fermer" is-open="popup3Open" ng-model="newFacture.date_remboursement" />
+								<span class="input-group-btn">
+		            				<button type="button" class="btn btn-default" ng-click="openPopup(3)"><i class="glyphicon glyphicon-calendar"></i></button>
+		          				</span>
+		          			</p>
+						</div>
+						<div class="form-group col-md-3">
+							<label>Catégorie (<a href="#/facturesrecues">+</a>)</label>
+							<select class="form-control" ng-model="newFacture.categorie" ng-options="category.id as category.nom for category in categories">
+							</select>
+						</div>
+						<div class="form-group col-md-3">
+							<label>État</label>
+							<select class="form-control" ng-model="newFacture.etat">
+								<option value="D">À payer</option>
+								<option value="R">À rembourser</option>
+								<option value="E">En attente</option>
+								<option value="P">Payée</option>
+							</select>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-12">
+							<label>Remarque</label>
+							<textarea class="form-control" rows="3" style="margin-bottom:5px;" ng-model="newFacture.remarque"></textarea>
+						</div>
+						<div class="col-md-12">
+							<div class="form-group">
+								<input type="checkbox" ng-model="newFacture.immobilisation" />
+								<label>Immobilisation</label>
+							</div>
+						</div>
+						<div class="col-md-12">
+							<span class="pull-right">
+								<button class=" btn btn-primary" type="submit" ng-click="addFacture(true)">Ajouter et entrer une autre facture</button> 
+								<button class=" btn btn-success" type="button" ng-click="addFacture(false)">Ajouter</button>
+							</span>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+		<div class="row" ng-show="factures.length > 0">
+			<div class="col-md-4">
+				<p class="input-group">
+					<span class="input-group-addon">Recherche</span>
+					<input type="text" class="form-control" ng-model="searchField" />
+				</p>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-offset-2 col-md-2 col-sm-3">
+				<div class="checkbox">
+					<label><input type="checkbox" ng-model="filters.payees" /> Factures payées</label>
+				</div>
+			</div>
+			<div class="col-md-2 col-sm-3">
+				<div class="checkbox">
+					<label><input type="checkbox" ng-model="filters.apayer" /> Factures à payer</label>
+				</div>
+			</div>
+			<div class="col-md-2 col-sm-3">
+				<div class="checkbox">
+					<label><input type="checkbox" ng-model="filters.arembourser" /> Factures à rembourser</label>
+				</div>
+			</div>
+			<div class="col-md-2 col-sm-3">
+				<div class="checkbox">
+					<label><input type="checkbox" ng-model="filters.enattente" /> Factures en attente</label>
+				</div>
+			</div>
+		</div>
+		<table class="table table-striped" ng-show="factures.length > 0">
+			<thead>
+				<tr>
+					<th>Réf.</th>
+					<th>Entreprise</th>
+					<th>Date</th>
+					<th>Date paiement</th>
+					<th>Date remboursement</th>
+					<th>Prix TTC</th>
+					<th>TVA</th>
+					<th>État</th>
+					<th>Personne à rembourser</th>
+					<th>Perm</th>
+				</tr>
+			</thead>
+			<tr ng-repeat="facture in getFactures() | orderBy:'-date' | filter:searchField">
+				<td><a href="#/facturesrecues/{{facture.id}}">Fac. {{ getCategoryCode(facture.categorie) + facture.id }}</a></td>
+				<td>{{ facture.nom_entreprise }}</td>
+				<td>{{ facture.date | date }}</td>
+				<td>{{ facture.date_paiement | date }}</td>
+				<td>{{ (facture.date_remboursement | date) || '--' }}</td>
+				<td>{{ facture.prix }} €</td>
+				<td>{{ tva.getVATFromTTCAndPercentage(facture.prix, facture.tva).toFixed(2) }} €</td>
+				<td ng-show="facture.modifyingState">
+					<select class="form-control" ng-model="facture.etat">
+						<option value="D">À payer</option>
+						<option value="R">À rembourser</option>
+						<option value="E">En attente</option>
+						<option value="P">Payée</option>
+					</select>
+					<button class="btn btn-xs btn-primary" ng-click="sendState(facture)" ng-disabled="facture.updating"><span class="glyphicon glyphicon-ok"></span></button>
+				</td>
+				<td ng-hide="facture.modifyingState"><span class="label" ng-class="stateLabel(facture.etat)">{{ state(facture.etat) }}</span> <a href="" ng-click="modifyState(facture)" class="glyphicon glyphicon-pencil"></a></td>
+				<td>{{ (facture.personne_a_rembourser) || '--' }}</td>
+				<td><a ng-show="facture.perm" href="#/perm/{{facture.perm}}">Détails</a><span ng-hide="facture.perm">--</span></td>
+			</tr>
+		</table>
+		<p ng-show="factures.length === 0">Aucune facture.</p>
+	</div>
+</div>
+<div ng-show="cas.isAdmin()" align="center">
+	<hr>
+	<p><a href="{{ facturesUrl }}">Télécharger au format Excel</a></p>
+</div>

@@ -1,0 +1,82 @@
+<div class="row">
+	<div class="col-md-12">
+		<div class="page-header">
+			<h1><a href="#/facturesemises">Factures émises</a> > <span ng-show="facture">{{facture.destinataire}} <small>{{facture.date_creation | date}}</small></span><span ng-show="facture" class="pull-right"><button ng-show="!modifyingFacture" ng-click="modifyFacture()" class="btn btn-primary">Modifier</button><button ng-show="modifyingFacture" ng-click="saveFacture()" class="btn btn-primary">Sauvegarder</button> <button ng-show="modifyingFacture" ng-click="cancelModifyingFacture()" class="btn btn-danger">Annuler</button></span></h1>
+		</div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-12">
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th>Destinataire</th>
+					<th>Créateur</th>
+					<th>Création</th>
+					<th>Dûe</th>
+					<th>État</th>
+					<th>Date de paiement</th>
+				</tr>
+			</thead>
+			<tr>
+				<td ng-hide="modifyingFacture">{{ facture.destinataire }}</td><td ng-show="modifyingFacture"><input type="text" class="form-control" ng-model="facture.destinataire" /></td>
+				<td ng-hide="modifyingFacture">{{ facture.nom_createur }}</td><td ng-show="modifyingFacture"><input type="text" class="form-control" ng-model="facture.nom_createur" /></td>
+				<td>{{ facture.date_creation | date }}</td>
+				<td ng-hide="modifyingFacture">{{ facture.date_due | date }}</td><td ng-show="modifyingFacture"><input type="text" class="form-control" ng-model="facture.date_due" /></td>
+				<td ng-hide="modifyingFacture"><span class="label" ng-class="stateLabel(facture.etat)">{{ state(facture.etat) }}</span></td>
+				<td ng-show="modifyingFacture">
+					<select class="form-control" ng-model="facture.etat">
+						<option value="D">Dûe</option>
+						<option value="T">Partiellement payée</option>
+						<option value="P">Payée</option>
+						<option value="A">Annulée</option>
+					</select>
+				</td>
+				<td ng-hide="modifyingFacture">{{ (facture.date_paiement | date) || '--' }}</td><td ng-show="modifyingFacture"><input type="text" class="form-control" ng-model="facture.date_paiement" /></td>
+			</tr>
+		</table>
+		<p><a href="{{ app_url + '/facture/' + facture.id }}" class="btn btn-primary btn-lg btn-block" target="_blank">Imprimer</a></p>
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-12">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				Éléments de la facture
+			</div>
+			<div class="panel-body">
+				<table class="table table-striped">
+					<thead>
+						<tr>
+							<th>Nom</th>
+							<th>Prix TTC</th>
+							<th>TVA (%)</th>
+							<th>Quantité</th>
+							<th><button class="pull-right btn btn-primary fa fa-plus" ng-click="addingElement = !addingElement"></button></th>
+						</tr>
+					</thead>
+					<tr ng-repeat="element in facture.factureemiserow_set">
+						<td ng-hide="element.modifying">{{ element.nom }}</td>
+						<td ng-hide="element.modifying">{{ element.prix }} €</td>
+						<td ng-hide="element.modifying">{{ element.tva }} %</td>
+						<td ng-hide="element.modifying">{{ element.qty }}</td>
+						<td ng-hide="element.modifying"><a href="" ng-click="modifyElement(element)">Modifier</a></td>
+
+						<td ng-show="element.modifying"><input type="text" ng-model="element.nom" class="form-control" /></td>
+						<td ng-show="element.modifying"><input type="number" ng-model="element.prix" class="form-control" /></td>
+						<td ng-show="element.modifying"><input type="number" ng-model="element.tva" class="form-control" /></td>
+						<td ng-show="element.modifying"><input type="number" ng-model="element.qty" class="form-control" /></td>
+						<td ng-show="element.modifying"><a href="" ng-click="saveElement(element)">Enregistrer</a> | <a href="" class="text-danger" ng-click="deleteEl(element, $index)">Supprimer</a> | <a href="" ng-click="stopModifyingElement(element)">Annuler</a></td>
+					</tr>
+					<tr ng-show="addingElement">
+						<td><input type="text" ng-model="newElement.nom" class="form-control" /></td>
+						<td><input type="number" ng-model="newElement.prix" class="form-control" /></td>
+						<td><input type="number" ng-model="newElement.tva" class="form-control" /></td>
+						<td><input type="number" ng-model="newElement.qty" class="form-control" /></td>
+						<td><a href="" ng-click="saveNewElement()">Enregistrer</a> | <a href="" ng-click="addingElement = false">Annuler</a></td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
