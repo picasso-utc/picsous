@@ -6,32 +6,14 @@ angular.module('picsousApp').factory('casConnectionCheck', function($routeParams
 	*/
 
 
-	
-	// factory.isAuthenticated()
-
-	var identity = null;
-	// Login de l'utilisateur
-	var rights = null;
-	// Droits de l'utilisateur
-
-	var authenticated = null;
-
 
 	/**
 	*  Enregistre les variables auth et token dans un cookie
 	*/
-	var saveSessionStorage = function() {
-
-	  	// $cookies.putObject('PicAuth',
-    //   	{
-	   //      'identity' : identity,
-	   //      'rights' : rights,
-	   //      'authenticated' : authenticated,
-    //   	});
-
-    	localStorageService.set('identity', identity)
-		localStorageService.set('rights', rights)
-		localStorageService.set('authenticated', authenticated)
+	var saveSessionStorage = function(data) {
+    	localStorageService.set('identity', data.identity)
+		localStorageService.set('right', data.right)
+		localStorageService.set('authenticated', data.authenticated)
 	}
 
 	/**
@@ -39,15 +21,12 @@ angular.module('picsousApp').factory('casConnectionCheck', function($routeParams
 	*/
 	var loadSessionStorage = function() {
 
-		identity = localStorageService.get('identity')
-		rights = localStorageService.get('rights')
-		authenticated = localStorageService.get('authenticated')
+		var data = {};
+		data.identity = localStorageService.get('identity');
+		data.right = localStorageService.get('right');
+		data.authenticated = localStorageService.get('authenticated');
+		return data;
 
-		// if($cookies.getObject('PicAuth')) {
-	 // 		identity = $cookies.getObject('PicAuth').identity;
-		//   	rights = $cookies.getObject('PicAuth').rights;
-		//   	authenticated = $cookies.getObject('PicAuth').authenticated;
-		// }
 	}
 
 	/**
@@ -55,9 +34,9 @@ angular.module('picsousApp').factory('casConnectionCheck', function($routeParams
 	*/
 	var removeSessionStorage = function(){
 		// $cookies.remove('PicAuth');
-		identity = localStorageService.remove('identity')
-		rights = localStorageService.remove('rights')
-		authenticated = localStorageService.remove('authenticated')
+		localStorageService.remove('identity')
+		localStorageService.remove('right')
+		localStorageService.remove('authenticated')
 	}
 
 
@@ -73,18 +52,18 @@ angular.module('picsousApp').factory('casConnectionCheck', function($routeParams
 		
 		// Fonction retournant true si l'utilisateur est connecté,
 		// et false si l'utilisateur n'est pas connecté
-		// return rights !== null;
-		return authenticated
+		// Vérifie également les droits M pour Member et A pour Admin
+		const data = loadSessionStorage()
+		return data.authenticated && (data.right == "M" || data.right == "A")
 	};
+
 
 	var getMyRights = function() {
 
-
-		loadSessionStorage()
-
+		const data = loadSessionStorage()
 		/* Fonction interrogant le serveur pour savoir si l'utilisateur
 		est authentifié - retourne la promesse $http */
-		if (isUser()) {
+		if (logged()) {
 			return $q.all();
 		} else {
 			return $http({
@@ -92,18 +71,19 @@ angular.module('picsousApp').factory('casConnectionCheck', function($routeParams
 				method: 'GET',
 				withCredentials: true,
 			})
-
-			// $http({
-			// 	url: APP_URL + '/getmyrights',
-			// 	method: 'GET'
-			// });
 		}
 	};
 
 	var isUser = function() {
 		// Fonction retournant true si l'utilisateur est connecté et a des droits
-		return logged() && rights;
+		return logged();
 	};
+
+
+	var isAdmin = function(){
+		const data = loadSessionStorage();
+		return data.authenticated && data.right == "A";
+	}
 
 	var sendToFuck = function() {
 		// Fonction renvoyant l'utilisateur vers la page 403 définie
@@ -113,26 +93,28 @@ angular.module('picsousApp').factory('casConnectionCheck', function($routeParams
 	var sendToCAS = function(originalUrl) {
 		// Fonction retournant l'utilisateur vers le serveur CAS pour une authentification
 		// L'URL du service est définie en paramètre
-		// $window.location.href = CAS_URL + '/login?service=' + originalUrl;
 		$window.location.href = "http://localhost:8000/api/auth/login?redirect=" + originalUrl;
-		// $http({
-		// 	url: 'http://localhost:8000/api/auth/login',
-		// 	method: 'GET'
-		// }).then(function(response){
-		// 	console.log(response)
-		// });
-	};
-	
-	var addToken = function(receivedToken) {
-		// Fonction insérant le token passé en paramètre dans le service de sauvegarde de token
-		token.setToken(receivedToken);
 	};
 
+
+	var logout = function(){
+		$window.location.href = 'https://cas.utc.fr/cas/logout';
+	}
+	
+
+	var goLogin = function(){
+		var originalUrl = $window.location.href.split('#')[0].split('?')[0];
+		sendToCAS(originalUrl);
+	}
+
+
 	var callRights = function() {
+
 		/*
 			Fonction vérifiant les droits de l'utilisateur.
-			- Si l'utilisateur est connecté : on sauvegarde ses droits en mémoire.
+			- Si l'utilisateur est connecté et est membre du Pic : on sauvegarde ses informations dans la session locale.
 			- Si l'utilisateur n'est pas connecté :
+				On l'envoie vers le CAS via l'API Kraken
 				- Si l'utilisateur vient du serveur CAS (détecté par les paramètres dans l'URL) :
 				On envoie le ticket et le service au serveur, pour l'authentifier.
 					- Si l'authentification réussit, on sauvegarde le token d'authentification
@@ -141,70 +123,36 @@ angular.module('picsousApp').factory('casConnectionCheck', function($routeParams
 				- Si l'utilisateur ne vient pas du CAS, on le redirige vers le CAS.
 		*/
 		return $q(function(resolve, failPromise) {
-			getMyRights().then(function(response) {
-				if (response.data && response.data.authenticated === false) {
-					var originalUrl = $window.location.href.split('#')[0].split('?')[0];
-					$window.location.href = "http://localhost:8000/api/auth/login?redirect=" + originalUrl;
-					// Utilisateur pas connecté
-					// var tick = $window.location.href.split('ticket=');
-					// var originalUrl = $window.location.href.split('#')[0].split('?')[0];
-					// // var originalUrl = "google.com"
-					// if (tick.length > 1) {
-					// 	tick = tick[1].split('#')[0].split('&')[0];
-					// 	$http({
-					// 		method: 'POST',
-					// 		url: APP_URL + '/connexion',
-					// 		data: {
-					// 			ticket: tick,
-					// 			service: originalUrl,
-					// 		},
-					// 	}).then(function(connectionResponse) {
-					// 		identity = connectionResponse.data.success.login;
-					// 		addToken(connectionResponse.data.success.token);
-					// 		callRights();
-					// 		resolve(connectionResponse);
-					// 	}, function() {
-					// 		sendToFuck();
-					// 		failPromise();
-					// 	});
-					// } else {
-					// 	sendToCAS(originalUrl);
-					// 	failPromise();
-					// }
+
+			$http({
+				url: 'http://localhost:8000/api/auth/me',
+				method: 'GET',
+				withCredentials: true,
+			}).then(function(response){
+				if (response) {
+					if (response.data && response.data.authenticated && (response.data.right == "A" || response.data.right == "M")) {
+						saveSessionStorage(response.data);	
+					} else {
+						sendToFuck();
+					}
 				} else {
-					if (response.data && !response.data.right) {
-						sendToFuck()
-					}
-					// Utilisateur connecté : on sauvegarde ses droits
-					// rights = response.data;
-					if (response.data) {
-						authenticated = response.data.authenticated
-						rights = response.data.right
-						identity = response.data.login
-						saveSessionStorage()
-					}
-						
-					resolve(rights);
+					goLogin();
 				}
-			}, function(){
-				failPromise()
-			});
+			}, function(error){
+				goLogin();
+			})
 		});
 	};
 
 
-
-	// return null;
 	var searchPromise = callRights();
 
 	return {
 		identify: function() { return identity; },
 		
-	// 	token: function() { return token; },
-
 		disconnect: function() {
 			removeSessionStorage()
-			$window.location.href = 'https://cas.utc.fr/cas/logout';
+			logout();
 		},
 
 		isConnected: function() {
@@ -212,11 +160,10 @@ angular.module('picsousApp').factory('casConnectionCheck', function($routeParams
 		},
 
 		isAdmin: function() {
-			return rights == 'A';
+			return isAdmin();
 		},
 		
 		isUser: function() {
-			// return null;
 			return isUser();
 		},
 
