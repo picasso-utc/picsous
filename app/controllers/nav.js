@@ -10,7 +10,6 @@ angular.module('picsousApp').controller('NavCtrl', function($scope, casConnectio
 			method: 'GET',
 			url: APP_URL + '/logout',
 		}).then(function() {
-			token.setToken();
 			$window.location.href = 'https://cas.utc.fr/cas/logout';
 		});
 	};
