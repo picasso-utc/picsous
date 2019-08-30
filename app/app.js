@@ -20,10 +20,6 @@ angular.module('picsousApp', [
 			templateUrl: 'views/bank.html',
 			controller: 'BankSimulationCtrl',
 			reloadOnSearch: false,
-		}).when('/backoffice', {
-			templateUrl: 'views/backoffice.html',
-			controller: 'BackofficeCtrl',
-			reloadOnSearch: false,
 		}).when('/addperm', {
 			templateUrl: 'views/addperm.html',
 			controller: 'AddPermCtrl',
