@@ -89,6 +89,7 @@ angular.module('picsousApp', [
 
 				responseError: function(response) {
 					loadingSpin.end();
+					// To DO ajouter une redirection vers login quand erreur 403 ou 401
 					// if (response.config.url.search('autocomplete') !== -1) {
 					// 	return;
 					// }
@@ -97,7 +98,7 @@ angular.module('picsousApp', [
 					// } else {
 					// 	message.error('Impossible de se connecter au serveur.');
 					// }
-					// return $q.reject(response);
+					return $q.reject(response);
 				}
 			}
 		});
