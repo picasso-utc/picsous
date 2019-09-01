@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('picsousApp').factory('semester', function($http, $route, APP_URL, casConnectionCheck) {
+angular.module('picsousApp').factory('semester', function(serviceAjax, $route, casConnectionCheck) {
     /*
     Module permettant de gérer le semestre actuel, et de changer de semestre à
     la volée.
@@ -10,7 +10,7 @@ angular.module('picsousApp').factory('semester', function($http, $route, APP_URL
     var semesters = [];
     // Fonction permettant de mettre à jour la liste des semestres.
     var getSemesters = function() {
-        return $http({ method: 'GET', url: APP_URL + '/semestres/' }).then(function(response) {
+        return serviceAjax.get('semesters').then(function(response) {
             semesters.length = 0;
             response.data.forEach(function(s) {
                 semesters.push(s);
@@ -52,9 +52,12 @@ angular.module('picsousApp').factory('semester', function($http, $route, APP_URL
         }
     };
 
-    casConnectionCheck.searchPromise().then(function() {
-        getSemesters();
-    });
+    var init = function(){
+        casConnectionCheck.searchPromise().then(function() {
+            getSemesters();
+        });
+    }
+    init()
 
     return {
         allSemesters: semesters,
@@ -63,7 +66,7 @@ angular.module('picsousApp').factory('semester', function($http, $route, APP_URL
         currentSemester: function() {
             return currentSemester;
         },
-        currentCredit: function () { return  $http({ method: 'GET', url: APP_URL + '/getCurrentCredit' }) },
+        currentCredit: function () { return  serviceAjax.get('core/semester/credit')},
         currentSemesterName: function(id) { return semesterNameById(id); },
     };
 });

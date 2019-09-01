@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('picsousApp').factory('casConnectionCheck', function($routeParams, $http, APP_URL, $window, token, $q, $rootScope, localStorageService) {
+angular.module('picsousApp').factory('casConnectionCheck', function($http, $window, $q, localStorageService) {
 	/*
 		Module de gestion de la connexion de l'utilisateur
 	*/
@@ -130,16 +130,20 @@ angular.module('picsousApp').factory('casConnectionCheck', function($routeParams
 				withCredentials: true,
 			}).then(function(response){
 				if (response) {
-					if (response.data && response.data.authenticated && (response.data.right == "A" || response.data.right == "M")) {
+					if (response.data.authenticated && (response.data.right == "A" || response.data.right == "M")) {
 						saveSessionStorage(response.data);	
+						resolve();
 					} else {
+						failPromise();
 						sendToFuck();
 					}
 				} else {
 					goLogin();
+					failPromise();
 				}
 			}, function(error){
 				goLogin();
+				failPromise();
 			})
 		});
 	};
