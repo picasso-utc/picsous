@@ -35,7 +35,7 @@
 				<td ng-hide="modifyingFacture">{{ (facture.date_paiement | date) || '--' }}</td><td ng-show="modifyingFacture"><input type="text" class="form-control" ng-model="facture.date_paiement" /></td>
 			</tr>
 		</table>
-		<p><a href="{{ app_url + '/facture/' + facture.id }}" class="btn btn-primary btn-lg btn-block" target="_blank">Imprimer</a></p>
+		<p><a href="{{ app_url + '/facture/' + facture.id }}" class="btn btn-primary btn-lg btn-block" target="_blank" disabled>Imprimer</a></p>
 	</div>
 </div>
 <div class="row">

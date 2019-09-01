@@ -2,8 +2,9 @@
 
 /* global confirm */
 
-angular.module('picsousApp').controller('FactureEmiseCtrl', function($http, serverGetter, $routeParams, message, objectStates, APP_URL, $scope, NgTableParams) {
-	serverGetter.factureEmiseGetter($routeParams.id).then(function(response) {
+angular.module('picsousApp').controller('FactureEmiseCtrl', function($routeParams, message, objectStates, APP_URL, $scope, serviceAjax) {
+
+	serviceAjax.get('facture/emise/' + $routeParams.id).then(function(response) {
 		$scope.facture = response.data;
 	});
 
@@ -21,10 +22,7 @@ angular.module('picsousApp').controller('FactureEmiseCtrl', function($http, serv
 		if (!confirm('Voulez-vous vraiment supprimer l\'élement ' + element.nom + ' ?')) {
 			return;
 		}
-		$http({
-			method: 'DELETE',
-			url: APP_URL + '/facture/emiserow/' + element.id + '/',
-		}).then(function() {
+		serviceAjax.delete('facture/emiserow/' + element.id + '/').then(function() {
 			message.success('Élément ' + element.nom + ' supprimé !');
 			$scope.facture.factureemiserow_set.splice(index, 1);
 		})
@@ -32,11 +30,7 @@ angular.module('picsousApp').controller('FactureEmiseCtrl', function($http, serv
 
 	$scope.saveNewElement = function() {
 		$scope.newElement.facture = $routeParams.id;
-		$http({
-			method: 'POST',
-			url: APP_URL + '/facture/emiserow/',
-			data: $scope.newElement,
-		}).then(function(response) {
+		serviceAjax.post('facture/emiserow/', $scope.newElement).then(function(response) {
 			$scope.facture.factureemiserow_set.push(response.data);
 			$scope.newFacture = {};
 			$scope.addingElement = false;
@@ -44,11 +38,7 @@ angular.module('picsousApp').controller('FactureEmiseCtrl', function($http, serv
 	};
 
 	$scope.saveFacture = function() {
-		$http({
-			method: 'PUT',
-			url: APP_URL + '/facture/emise/' + $routeParams.id + '/',
-			data: $scope.facture,
-		}).then(function(response) {
+		serviceAjax.put('facture/emise/' + $routeParams.id + '/', $scope.facture).then(function(response) {
 			$scope.facture = response.data;
 			$scope.modifyingFacture = false;
 			message.success('Facture modifiée !');
@@ -74,11 +64,7 @@ angular.module('picsousApp').controller('FactureEmiseCtrl', function($http, serv
 		var data = angular.copy(el);
 		delete data.modifying;
 		delete data.old;
-		$http({
-			method: 'PUT',
-			url: APP_URL + '/facture/emiserow/' + el.id + '/',
-			data: data,
-		}).then(function() {
+		serviceAjax.put('facture/emiserow/' + el.id + '/', data).then(function() {
 			el.modifying = false;
 			message.success('Élément modifié !');
 		});
