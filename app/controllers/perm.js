@@ -11,7 +11,7 @@ angular.module('picsousApp').controller('PermCtrl', function($routeParams, casCo
 
 	$scope.totalSales = function() {
 		$scope.salesInfo = null;
-		serviceAjax.get('permsales/' + $routeParams.id + '/').then(function(response) {
+		serviceAjax.get('perms/sales/' + $routeParams.id).then(function(response) {
 			$scope.salesInfo = response.data;
 		});
 	};;
