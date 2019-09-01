@@ -1,17 +1,11 @@
 'use strict';
 
-angular.module('picsousApp').controller('NavCtrl', function($scope, casConnectionCheck, superadmin, semester, $http, $window, token, APP_URL) {
+angular.module('picsousApp').controller('NavCtrl', function($scope, casConnectionCheck, semester, serviceAjax) {
 	$scope.cas = casConnectionCheck;
-	$scope.superadmin = superadmin;
 	
 	$scope.logout = function() {
 		// Fonction pour déconnecter l'utilisateur
-		$http({
-			method: 'GET',
-			url: APP_URL + '/logout',
-		}).then(function() {
-			$window.location.href = 'https://cas.utc.fr/cas/logout';
-		});
+		serviceAjax.get('auth/logout')
 	};
 
 	$scope.showAllSemesters = function() { semester.setSemester('all'); };

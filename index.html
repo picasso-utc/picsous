@@ -33,7 +33,6 @@
 								<li class="dropdown-header"> Factures</li>
 		            <li><a href="#/facturesemises"><i class="fa fa-fw fa-upload"></i> Factures émises</a></li>
 		            <li><a href="#/facturesrecues"><i class="fa fa-fw fa-download"></i> Factures reçues</a></li>
-								<!-- <li><a href="#/stats"><i class="fa fa-fw fa-area-chart"></i> Statistiques</a></li> -->
 								<li class="dropdown-header"> Chèques</li>
 		            <li><a href="#/cheques"><i class="fa fa-fw fa-money"></i> Chèques</a></li>
 		          </ul>
@@ -51,8 +50,6 @@
 								<li ng-repeat="semester in getSemesters()"><a href="" ng-click="setSemester(semester)">{{ semesterName(semester) }}</a></li>
 							</ul>
 						</li>
-						<li><a href="" ng-click="superadmin.removeSuperadmin()" ng-if="cas.isAdmin() && superadmin.isActive()"><i class="fa fa-fw fa-check"></i> Retour mode normal</a></li>
-						<li><a href="" ng-click="superadmin.setSuperadmin()" ng-if="cas.isAdmin() && !superadmin.isActive() && superadmin.isShowable()"><i class="fa fa-fw fa-warning"></i> Activer mode admin</a></li>
 		      	<li><a ng-click="logout()" ng-if="cas.isConnected()"><i class="fa fa-fw fa-power-off"></i> Déconnexion</a></li>
 		        <li id="loading-spinner" style="display: none;">
 			        <div class="spinner spinner-navbar">
@@ -96,13 +93,10 @@
 	<script src="app/directives/dateselector.js"></script>
 	<script src="app/services/tva.js"></script>
 	<script src="app/services/semester.js"></script>
-	<script src="app/services/token.js"></script>
 	<script src="app/services/message.js"></script>
 	<script src="app/services/dateWrapper.js"></script>
 	<script src="app/services/loadingspin.js"></script>
 	<script src="app/services/casconnectioncheck.js"></script>
 	<script src="app/services/objectStates.js"></script>
-	<script src="app/services/serverGetter.js"></script>
 	<script src="app/services/serviceAjax.js"></script>
-	<script src="app/services/superadmin.js"></script>
 </html>

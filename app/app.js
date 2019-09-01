@@ -64,7 +64,7 @@ angular.module('picsousApp', [
 			redirectTo: '/'
 		});
 
-		$httpProvider.interceptors.push(function($q, message, APP_URL, token, loadingSpin) {
+		$httpProvider.interceptors.push(function($q, loadingSpin) {
 			return {
 				request: function(config) {
 					// var requestToken = token.getToken();
