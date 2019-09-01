@@ -222,7 +222,7 @@ angular.module('picsousApp').controller('PermCtrl', function($routeParams, casCo
 
 	$scope.addToPayutc = function(article) {
 		article.addingToPayutc = true;
-		serviceAjax.get('createpayutcarticle/' + article.id + '/').then(function(response) {
+		serviceAjax.get('perms/payutc/article/' + article.id).then(function(response) {
 			article.id_payutc = response.data;
 			article.addingToPayutc = false;
 			message.success('Article bien ajouté à PayUTC !');

@@ -246,7 +246,7 @@
 				<td ng-hide="article.hardModifying">{{ article.ventes }} / {{article.stock}}</td>
 				<td colspan="2" ng-show="article.hardModifying"><input type="text" class="form-control" ng-model="article.ventes"></td>
 				<td ng-hide="article.hardModifying"><button ng-click="updateArticle(article)" class="btn btn-primary btn-xs" ng-disabled="!article.id_payutc">Mettre à jour</button> <span ng-show="article.ventes_last_update">(Mis à jour le {{ article.ventes_last_update | date }})</span></td>
-				<td ng-hide="article.hardModifying">{{ article.id_payutc ? 'Ajouté' : '' }}<button ng-click="addToPayutc(article)" class="btn btn-primary btn-xs" ng-hide="article.id_payutc" ng-disabled="article.addingToPayutc || true">Ajouter à PayUTC</button></td>
+				<td ng-hide="article.hardModifying">{{ article.id_payutc ? 'Ajouté' : '' }}<button ng-click="addToPayutc(article)" class="btn btn-primary btn-xs" ng-hide="article.id_payutc" ng-disabled="article.addingToPayutc">Ajouter à PayUTC</button></td>
 				<td ng-show="article.hardModifying"><input type="text" class="form-control" ng-model="article.id_payutc"></td>
 				<td ng-hide="article.simpleModifying"><button class="btn btn-success btn-xs" ng-disabled="article.id_payutc" ng-click="simpleModification(article)">Modifier</button> <button ng-show="superadmin.access()" class="btn btn-warning btn-xs" ng-click="hardModification(article)"><i class="fa fa-fw fa-warning"></i> Forcer modifications</button></td>
 				<td ng-show="article.simpleModifying"><button class="btn btn-xs btn-primary" ng-click="savingArticle(article, article.hardModifying)">Sauvegarder</button> <button class="btn btn-xs btn-danger" ng-click="cancelSavingArticle(article)">Annuler</button></td>
