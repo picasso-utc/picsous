@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('picsousApp').controller('FacturesEmisesCtrl', function($http, $q, APP_URL, $scope, message, objectStates, NgTableParams, serverGetter) {
+angular.module('picsousApp').controller('FacturesEmisesCtrl', function($http, $q, APP_URL, $scope, message, objectStates, serviceAjax, serverGetter) {
 	$scope.factureRowsInit = function() { $scope.newFactureRows = [{}]; };
 	$scope.factureRowsInit();
 
@@ -12,17 +12,13 @@ angular.module('picsousApp').controller('FacturesEmisesCtrl', function($http, $q
 	};
 
 	$scope.getFactures = function() {
-		serverGetter.facturesEmisesGetter().then(function(response) {
+		serviceAjax.get('facture/emise/').then(function(response) {
 			$scope.factures = response.data;
 		});
 	};
 
 	$scope.sendFacture = function() {
-		$http({
-			method: 'POST',
-			url: APP_URL + '/facture/emise/',
-			data: $scope.newFacture
-		}).then(function(response) {
+		serviceAjax.post('facture/emise/', $scope.newFacture).then(function(response) {
 			$scope.newFacture.id = response.data.id;
 			$scope.sendFactureRows(response.data.id);
 		});
@@ -32,11 +28,7 @@ angular.module('picsousApp').controller('FacturesEmisesCtrl', function($http, $q
 		var promises = [];
 		$scope.newFactureRows.forEach(function(row) {
 			row.facture = id;
-			promises.push($http({
-				method: 'POST',
-				url: APP_URL + '/facture/emise/row/',
-				data: row,
-			}));
+			promises.push(serviceAjax.post('facture/emiserow/', row))
 		});
 		$q.all(promises).then(function() {
 			message.success('Facture bien ajoutée !');
