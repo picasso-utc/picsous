@@ -4,10 +4,7 @@
 			<h1>
 				<a href="#/allperms">Perms</a> > {{ perm.nom }}
 				<span class="pull-right">
-					<!-- <button ng-click="modifyPerm()" ng-hide="modifyingPerm" class="btn btn-primary">Modifier</button>  -->
-					<button ng-hide="modifyingPerm || !isAdmin()" class="btn btn-success" ng-click="totalSales()">Obtenir les ventes</button>
-					<button ng-click="savePerm()" ng-show="modifyingPerm" class="btn btn-primary">Sauvegarder</button> 
-					<button class="btn btn-danger" ng-show="modifyingPerm" ng-click="cancelModifyPerm()">Annuler</button>
+					<button ng-hide="!isAdmin()" class="btn btn-success" ng-click="totalSales()" disabled>Obtenir les ventes</button>
 				</span>
 			</h1>
 		</div>
@@ -23,34 +20,23 @@
 					<th>Période</th>
 					<th>Asso</th>
 					<th>Responsable</th>
-					<th ng-show="modifyingPerm">Mail</th>
+					<th>État</th>
 					<th>Action</th>
-					<th ng-if="modifyingPerm">Traitée</th>
 				</tr>
 			</thead>
-			<tr ng-if="!modifyingPerm">
+			<tr>
 				<td>{{ perm.perm.nom }}</td>
 				<td>{{ perm.date | date }}</td>
 				<td>{{ perm.creneau === 'S' ? 'Soir' : (perm.creneau === 'M' ? 'Matin' : 'Déjeuner') }}</td>
 				<td>{{ perm.perm.asso ? 'Association' : 'Groupe de potes' }}</td>
 				<td><a href="mailto:{{perm.perm.mail_resp}}">{{ perm.perm.nom_resp }}</a> ({{perm.perm.mail_resp}})</td>
 				<td><span ng-class="stateLabel(perm.state)" class="label">{{ stateString(perm.state) }}</span></td>
-			</tr>
-<!-- 			<tr ng-if="modifyingPerm">
-				<td><input type="text" class="form-control" ng-model="perm.perm.nom" /></td>
-				<td><input type="text" class="form-control" ng-model="perm.date" /></td>
 				<td>
 					<!-- TO DO fonction a faire -->
-					<button ng-click="modifyPerm()" ng-if="perm.state != 'T'" class="btn btn-primary">Traitée</button> 
-					<button ng-click="modifyPerm()" ng-if="perm.state == 'T'" class="btn btn-primary">Non traitée</button> 
-						<option value="S">Soir</option>
-					</select>
+					<button ng-click="modifyPerm()" ng-if="perm.state != 'T'" class="btn btn-primary" disabled>Traitée</button> 
+					<button ng-click="modifyPerm()" ng-if="perm.state == 'T'" class="btn btn-primary" disabled>Non traitée</button> 
 				</td>
-				<td><input type="checkbox" ng-model="perm.perm.asso" /></td>
-				<td><input type="text" class="form-control" ng-model="perm.perm.nom_resp" /></td>
-				<td><input type="text" class="form-control" ng-model="perm.perm.mail_resp" /></td>
-				<td><input type="checkbox" ng-model="perm.traitee" /></td>
-			</tr> -->
+			</tr>
 		</table>
 	</div>
 </div>
@@ -67,12 +53,12 @@
 </div>
 <div class="row" ng-show="perm.perm.asso">
 	<div class="col-sm-6" style="margin-top:10px;">
-		<a href="{{ app_url + '/convention/' + perm.id }}" class="btn btn-block btn-lg btn-primary" target="_blank">Afficher convention</a>
-		<a href="" ng-click="sendConvention()" class="btn btn-block btn-success">Envoyer convention par mail</a>
+		<a href="{{ app_url + '/convention/' + perm.id }}" class="btn btn-block btn-lg btn-primary" target="_blank" disabled>Afficher convention</a>
+		<a href="" ng-click="sendConvention()" class="btn btn-block btn-success" disabled>Envoyer convention par mail</a>
 	</div>
 	<div class="col-sm-6" style="margin-top:10px;">
-		<a href="{{ app_url + '/justificatif/' + perm.id }}" class="btn btn-block btn-lg btn-primary" target="_blank">Afficher justificatif de paiement</a>
-		<a href="" ng-click="sendJustificatif()" class="btn btn-block btn-success">Envoyer justificatif par mail</a>
+		<a href="{{ app_url + '/justificatif/' + perm.id }}" class="btn btn-block btn-lg btn-primary" target="_blank" disabled>Afficher justificatif de paiement</a>
+		<a href="" ng-click="sendJustificatif()" class="btn btn-block btn-success" disabled>Envoyer justificatif par mail</a>
 	</div>
 </div>
 <div class="row" ng-show="isAdmin()">
@@ -260,7 +246,7 @@
 				<td ng-hide="article.hardModifying">{{ article.ventes }} / {{article.stock}}</td>
 				<td colspan="2" ng-show="article.hardModifying"><input type="text" class="form-control" ng-model="article.ventes"></td>
 				<td ng-hide="article.hardModifying"><button ng-click="updateArticle(article)" class="btn btn-primary btn-xs" ng-disabled="!article.id_payutc">Mettre à jour</button> <span ng-show="article.ventes_last_update">(Mis à jour le {{ article.ventes_last_update | date }})</span></td>
-				<td ng-hide="article.hardModifying">{{ article.id_payutc ? 'Ajouté' : '' }}<button ng-click="addToPayutc(article)" class="btn btn-primary btn-xs" ng-hide="article.id_payutc" ng-disabled="article.addingToPayutc">Ajouter à PayUTC</button></td>
+				<td ng-hide="article.hardModifying">{{ article.id_payutc ? 'Ajouté' : '' }}<button ng-click="addToPayutc(article)" class="btn btn-primary btn-xs" ng-hide="article.id_payutc" ng-disabled="article.addingToPayutc || true">Ajouter à PayUTC</button></td>
 				<td ng-show="article.hardModifying"><input type="text" class="form-control" ng-model="article.id_payutc"></td>
 				<td ng-hide="article.simpleModifying"><button class="btn btn-success btn-xs" ng-disabled="article.id_payutc" ng-click="simpleModification(article)">Modifier</button> <button ng-show="superadmin.access()" class="btn btn-warning btn-xs" ng-click="hardModification(article)"><i class="fa fa-fw fa-warning"></i> Forcer modifications</button></td>
 				<td ng-show="article.simpleModifying"><button class="btn btn-xs btn-primary" ng-click="savingArticle(article, article.hardModifying)">Sauvegarder</button> <button class="btn btn-xs btn-danger" ng-click="cancelSavingArticle(article)">Annuler</button></td>
