@@ -1,8 +1,8 @@
 'use strict'
 
-angular.module('picsousApp').controller('FacturesRecuesCtrl', function ($http, APP_URL, $scope, tva, message, NgTableParams, dateWrapper, objectStates, casConnectionCheck) {
+angular.module('picsousApp').controller('FacturesRecuesCtrl', function ($http, API_URL, $scope, tva, message, serviceAjax, dateWrapper, objectStates, casConnectionCheck) {
   $scope.cas = casConnectionCheck
-  $scope.facturesUrl = APP_URL + '/generate/factures?val=' + (new Date().getTime())
+  $scope.facturesUrl = API_URL + '/generate/factures?val=' + (new Date().getTime())
   $scope.tva = tva
   $scope.factures = []
   $scope.filters = {

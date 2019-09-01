@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('picsousApp').controller('FacturesEmisesCtrl', function($http, $q, APP_URL, $scope, message, objectStates, serviceAjax, serverGetter) {
+angular.module('picsousApp').controller('FacturesEmisesCtrl', function($http, $q, $scope, message, objectStates, serviceAjax, serverGetter) {
 	$scope.factureRowsInit = function() { $scope.newFactureRows = [{}]; };
 	$scope.factureRowsInit();
 
