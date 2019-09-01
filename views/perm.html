@@ -32,7 +32,6 @@
 				<td><a href="mailto:{{perm.perm.mail_resp}}">{{ perm.perm.nom_resp }}</a> ({{perm.perm.mail_resp}})</td>
 				<td><span ng-class="stateLabel(perm.state)" class="label">{{ stateString(perm.state) }}</span></td>
 				<td>
-					<!-- TO DO fonction a faire -->
 					<button ng-click="editPermState()" ng-if="perm.state != 'T'" class="btn btn-primary">Traitée</button> 
 					<button ng-click="editPermState()" ng-if="perm.state == 'T'" class="btn btn-primary">Non traitée</button> 
 				</td>
