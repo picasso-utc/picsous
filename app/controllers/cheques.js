@@ -2,25 +2,24 @@
 
 /* global confirm */
 
-angular.module('picsousApp').controller('ChequesCtrl', function ($scope, casConnectionCheck, APP_URL, $http, objectStates, message, serverGetter) {
-  $scope.cas = casConnectionCheck
-  $scope.chequesUrl = APP_URL + '/generate/cheques?val=' + (new Date().getTime())
+angular.module('picsousApp').controller('ChequesCtrl', function ($scope, casConnectionCheck, API_URL, objectStates, message, serviceAjax) {
+  
+	$scope.cas = casConnectionCheck
+  	$scope.chequesUrl = API_URL + '/generate/cheques?val=' + (new Date().getTime())
+
 	var loadCheques = function() {
-		serverGetter.chequesGetter().then(function(response) {
+		serviceAjax.get('facture/cheque').then(function(response) {
 			$scope.cheques = response.data;
 		});
 	};
 
 	$scope.quickChange = function(cheque) {
 		cheque.quicksave = true;
-		$http({
-			url: APP_URL + '/facture/cheques/' + cheque.id + '/',
-			method: 'PATCH',
-			data: {
-				id: cheque.id,
-				state: cheque.state,
-			}
-		}).then(function() {
+		const data = {
+			id: cheque.id,
+			state: cheque.state,
+		}
+		serviceAjax.patch('facture/cheque/' + cheque.id + '/', data).then(function() {
 			message.success('État du chèque bien modifié !');
 			delete cheque.quickChange;
 			delete cheque.quicksave;
@@ -39,11 +38,7 @@ angular.module('picsousApp').controller('ChequesCtrl', function ($scope, casConn
 		var newCheque = $scope.modifiedCheque
 		if (newCheque.date_emission) newCheque.date_emission = dateFormat(newCheque.date_emission)
 		if (newCheque.date_encaissement) newCheque.date_encaissement = dateFormat(newCheque.date_encaissement)
-		$http({
-			method: 'PUT',
-			url: APP_URL + '/facture/cheques/' + $scope.modifiedCheque.id + '/',
-			data: newCheque,
-		}).then(function(response) {
+		serviceAjax.put('facture/cheque/' + $scope.modifiedCheque.id + '/', newCheque).then(function(response) {
 			angular.copy(response.data, $scope.chequeInModification);
 			$scope.chequeInModification = null;
 			$scope.sendingChequeModification = false;
@@ -58,10 +53,7 @@ angular.module('picsousApp').controller('ChequesCtrl', function ($scope, casConn
 		if (!confirm('Voulez-vous vraiment supprimer ce chèque ?')) {
 			return;
 		}
-		$http({
-			method: 'DELETE',
-			url: APP_URL + '/facture/cheques/' + $scope.modifiedCheque.id + '/',
-		}).then(function() {
+		serviceAjax.delete('facture/cheque/' + $scope.modifiedCheque.id + '/').then(function() {
 			$scope.cheques = $scope.cheques.filter(function(c) {
 				return c.id !== cheque.id;
 			});
@@ -77,11 +69,7 @@ angular.module('picsousApp').controller('ChequesCtrl', function ($scope, casConn
 		var newCheque = $scope.newCheque
 		if (newCheque.date_emission) newCheque.date_emission = dateFormat(newCheque.date_emission)
 		if (newCheque.date_encaissement) newCheque.date_encaissement = dateFormat(newCheque.date_encaissement)
-		$http({
-			method: 'POST',
-			url: APP_URL + '/facture/cheques/',
-			data: newCheque
-		}).then(function(response) {
+		serviceAjax.post('facture/cheque/', newCheque).then(function(response) {
 			$scope.cheques.push(response.data)
 			$scope.newCheque = {}
 			$scope.addingCheque = false
