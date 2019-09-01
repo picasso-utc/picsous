@@ -24,7 +24,7 @@
 					<th>Asso</th>
 					<th>Responsable</th>
 					<th ng-show="modifyingPerm">Mail</th>
-					<th ng-if="!modifyingPerm">État</th>
+					<th>Action</th>
 					<th ng-if="modifyingPerm">Traitée</th>
 				</tr>
 			</thead>
@@ -40,9 +40,9 @@
 				<td><input type="text" class="form-control" ng-model="perm.perm.nom" /></td>
 				<td><input type="text" class="form-control" ng-model="perm.date" /></td>
 				<td>
-					<select ng-model="perm.creneau" class="form-control">
-						<option value="M">Matin</option>
-						<option value="D">Déjeuner</option>
+					<!-- TO DO fonction a faire -->
+					<button ng-click="modifyPerm()" ng-if="perm.state != 'T'" class="btn btn-primary">Traitée</button> 
+					<button ng-click="modifyPerm()" ng-if="perm.state == 'T'" class="btn btn-primary">Non traitée</button> 
 						<option value="S">Soir</option>
 					</select>
 				</td>
