@@ -20,10 +20,7 @@ angular.module('picsousApp').controller('FacturesRecuesCtrl', function ($http, A
     return true
   };
 
-  $http({
-    method: 'GET',
-    url: APP_URL + '/facture/recue/'
-  }).then(function (response) {
+  serviceAjax.get('facture/recue/').then(function (response) {
     $scope.factures = response.data
   })
 
@@ -58,11 +55,7 @@ angular.module('picsousApp').controller('FacturesRecuesCtrl', function ($http, A
 		if (!checkCategory($scope.newCategory)) {
 			return;
 		}
-		$http({
-			method: 'POST',
-			data: $scope.newCategory,
-			url: APP_URL + '/facture/categories/'
-		}).then(function(response) {
+		serviceAjax.post('facture/categories/', $scope.newCategory).then(function(response) {
 			$scope.categories.push(response.data);
 			message.success('Catégorie bien ajoutée !');
 		});
@@ -72,20 +65,13 @@ angular.module('picsousApp').controller('FacturesRecuesCtrl', function ($http, A
 		if (!checkCategory($scope.editingCategory)) {
 			return;
 		}
-		$http({
-			method: 'PUT',
-			data: $scope.editingCategory,
-			url: APP_URL + '/facture/categories/' + $scope.editingCategory.id + '/',
-		}).then(function() {
+		serviceAjax.put('facture/categories/' + $scope.editingCategory.id + '/', $scope.editingCategory).then(function() {
 			message.success('Catégorie bien modifiée !');
 		});
 	};
 
 	$scope.deleteCategory = function() {
-		$http({
-			method: 'DELETE',
-			url: APP_URL + '/facture/categories/' + $scope.editingCategory.id + '/',
-		}).then(function() {
+		serviceAjax.delete('facture/categories/' + $scope.editingCategory.id + '/').then(function() {
 			$scope.categories.forEach(function(f, i, a) {
 				if (f.id === $scope.editingCategory.id) {
 					a.splice(i, 1);
@@ -108,11 +94,7 @@ angular.module('picsousApp').controller('FacturesRecuesCtrl', function ($http, A
 		var pourcentage_tva = (newFacture.tva_complete / prixHT) * 100;
 		newFacture.tva = pourcentage_tva.toFixed(2);
 		delete newFacture.tva_complete;
-		$http({
-			method: 'POST',
-			data: newFacture,
-			url: APP_URL + '/facture/recue/',
-		}).then(function(response) {
+		serviceAjax.post('facture/recue/', newFacture).then(function(response) {
 			$scope.factures.push(response.data);
 			$scope.newFacture = {};
 			if (!keep) {
@@ -138,14 +120,7 @@ angular.module('picsousApp').controller('FacturesRecuesCtrl', function ($http, A
 
 	$scope.sendState = function(fac) {
 		fac.updating = true;
-		$http({
-			method: 'PATCH',
-			url: APP_URL + '/facture/recue/' + fac.id + '/',
-			data: {
-				id: fac.id,
-				etat: fac.etat,
-			}
-		}).then(function() {
+		serviceAjax.patch('facture/recue/' + fac.id + '/', data).then(function() {
 			fac.updating = false;
 			fac.modifyingState = false;
 			message.success('État de la facture modifié !');
@@ -158,10 +133,7 @@ angular.module('picsousApp').controller('FacturesRecuesCtrl', function ($http, A
 	$scope.stateLabel = objectStates.factureRecueStateLabel;
 
 	$scope.loadingFactures = true;
-	$http({
-		method: 'GET',
-		url: APP_URL + '/facture/categories/',
-	}).then(function(response) {
+	serviceAjax.get('facture/categories/').then(function(response) {
 		$scope.loadingFactures = false;
 		$scope.categories = response.data;
 	}, function() {
