@@ -33,8 +33,8 @@
 				<td><span ng-class="stateLabel(perm.state)" class="label">{{ stateString(perm.state) }}</span></td>
 				<td>
 					<!-- TO DO fonction a faire -->
-					<button ng-click="modifyPerm()" ng-if="perm.state != 'T'" class="btn btn-primary" disabled>Traitée</button> 
-					<button ng-click="modifyPerm()" ng-if="perm.state == 'T'" class="btn btn-primary" disabled>Non traitée</button> 
+					<button ng-click="editPermState()" ng-if="perm.state != 'T'" class="btn btn-primary">Traitée</button> 
+					<button ng-click="editPermState()" ng-if="perm.state == 'T'" class="btn btn-primary">Non traitée</button> 
 				</td>
 			</tr>
 		</table>

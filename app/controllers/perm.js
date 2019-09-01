@@ -105,6 +105,17 @@ angular.module('picsousApp').controller('PermCtrl', function($routeParams, casCo
 		assignTva()
 	});
 
+	$scope.editPermState = function(){
+		if ($scope.perm.state == 'T') {
+			$scope.perm.state = 'N';
+			$scope.perm.traitee = false;
+		} else if ($scope.perm.state == 'N') {
+			$scope.perm.state = 'T';
+			$scope.perm.traitee = true;
+		}
+		$scope.savePerm();
+	}
+
 	$scope.newArticle = {
 		tva: 5.5
 	};
@@ -155,9 +166,8 @@ angular.module('picsousApp').controller('PermCtrl', function($routeParams, casCo
 		delete sendPerm.article_set;
 		delete sendPerm.facturerecue_set;
 		delete sendPerm.traitee;
-		serviceAjax.put('perms/' + $routeParams.id + '/', sendPerm).then(function() {
+		serviceAjax.put('creneau/' + $routeParams.id + '/', sendPerm).then(function() {
 			$scope.perm.state = $scope.getState($scope.perm);
-			$scope.modifyingPerm = false;
 			message.success('Perm bien modifiée !');
 		});
 	};
