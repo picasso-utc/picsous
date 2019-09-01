@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('picsousApp').controller('PermCtrl', function($routeParams, casConnectionCheck, objectStates, $http, APP_URL, $scope, message, dateWrapper, superadmin, serverGetter) {
+angular.module('picsousApp').controller('PermCtrl', function($routeParams, casConnectionCheck, serviceAjax, objectStates, $http, APP_URL, $scope, message, dateWrapper, superadmin, serverGetter) {
 	$scope.app_url = APP_URL;
 	$scope.categories = [];
 	$scope.superadmin = superadmin;
@@ -11,10 +11,7 @@ angular.module('picsousApp').controller('PermCtrl', function($routeParams, casCo
 
 	$scope.totalSales = function() {
 		$scope.salesInfo = null;
-		$http({
-			method: 'GET',
-			url: APP_URL + '/permsales/' + $routeParams.id + '/',
-		}).then(function(response) {
+		serviceAjax.get('permsales/' + $routeParams.id + '/').then(function(response) {
 			$scope.salesInfo = response.data;
 		});
 	};;
@@ -60,11 +57,7 @@ angular.module('picsousApp').controller('PermCtrl', function($routeParams, casCo
 			data.ventes = parseInt(article.ventes);
 			endpoint += 'Admin';
 		}
-		$http({
-			method: 'PATCH',
-			url: APP_URL + '/' + endpoint + '/' + article.id + '/',
-			data: data,
-		}).then(function(response) {
+		serviceAjax.put(endpoint + '/' + article.id + '/', data).then(function(response) {
 			angular.extend(article, response.data);
 			delete article.old;
 			delete article.simpleModifying;
@@ -104,7 +97,7 @@ angular.module('picsousApp').controller('PermCtrl', function($routeParams, casCo
 		return state;
 	};
 
-	serverGetter.permGetter($routeParams.id).then(function(response) {
+	serviceAjax.get('creneau/' + $routeParams.id + '/').then(function(response){
 		$scope.perm = response.data;
 		$scope.newArticle.perm = $scope.perm.id;
 		$scope.perm.state = $scope.getState($scope.perm);
@@ -129,10 +122,7 @@ angular.module('picsousApp').controller('PermCtrl', function($routeParams, casCo
 	var oldPerm;
 
 	$scope.sendConvention = function() {
-		$http({
-			method: 'POST',
-			url: APP_URL + '/sendconvention/' + $scope.perm.id,
-		}).then(function() {
+		serviceAjax.post('sendconvention/' + $scope.perm.id).then(function() {
 			message.success('Convention envoyée !');
 		});
 	};
@@ -148,23 +138,11 @@ angular.module('picsousApp').controller('PermCtrl', function($routeParams, casCo
 	};
 
 	$scope.sendJustificatif = function() {
-		$http({
-			method: 'POST',
-			url: APP_URL + '/sendjustificatif/' + $scope.perm.id,
-		}).then(function() {
+		serviceAjax.post('sendjustificatif/' + $scope.perm.id).then(function(response){
 			message.success('Justificatif envoyé !');
 		});
 	};
 
-	// $scope.modifyPerm = function() {
-	// 	$scope.modifyingPerm = true;
-	// 	if ($scope.perm.state === 'T') {
-	// 		$scope.perm.traitee = true;
-	// 	} else {
-	// 		$scope.perm.traitee = false;
-	// 	}
-	// 	oldPerm = angular.copy($scope.perm);
-	// };
 
 	$scope.savePerm = function() {
 		if ($scope.perm.traitee) {
@@ -176,11 +154,7 @@ angular.module('picsousApp').controller('PermCtrl', function($routeParams, casCo
 		delete sendPerm.article_set;
 		delete sendPerm.facturerecue_set;
 		delete sendPerm.traitee;
-		$http({
-			method: 'PUT',
-			url: APP_URL + '/perms/' + $routeParams.id + '/',
-			data: sendPerm,
-		}).then(function() {
+		serviceAjax.put('perms/' + $routeParams.id + '/', sendPerm).then(function() {
 			$scope.perm.state = $scope.getState($scope.perm);
 			$scope.modifyingPerm = false;
 			message.success('Perm bien modifiée !');
@@ -202,10 +176,8 @@ angular.module('picsousApp').controller('PermCtrl', function($routeParams, casCo
 	};
 
 	if (casConnectionCheck.isAdmin()) {
-		$http({
-			method: 'GET',
-			url: APP_URL + '/facture/categories/',
-		}).then(function(response) {
+		serviceAjax.get('facture/categories/')
+		.then(function(response) {
 			$scope.categories = response.data;
 		});
 	}
@@ -224,24 +196,22 @@ angular.module('picsousApp').controller('PermCtrl', function($routeParams, casCo
 		newFacture.tva = pourcentage_tva.toFixed(2);
 		newFacture.perm = $routeParams.id;
 		delete newFacture.tva_complete;
-		$http({
-			method: 'POST',
-			data: newFacture,
-			url: APP_URL + '/facture/recu/',
-		}).then(function(response) {
+
+
+		serviceAjax.post('facture/recue/', newFacture)
+		.then(function(response) {
 			$scope.perm.facturerecue_set.push(response.data);
 			$scope.newFacture = {};
 			$scope.addingFacture = false;
 			message.success('Facture bien ajoutée !');
+		}, function(error){
+			console.log(error)
 		});
 	};
 
 	$scope.addToPayutc = function(article) {
 		article.addingToPayutc = true;
-		$http({
-			method: 'GET',
-			url: APP_URL + '/createpayutcarticle/' + article.id + '/',
-		}).then(function(response) {
+		serviceAjax.get('createpayutcarticle/' + article.id + '/').then(function(response) {
 			article.id_payutc = response.data;
 			article.addingToPayutc = false;
 			message.success('Article bien ajouté à PayUTC !');
@@ -251,10 +221,7 @@ angular.module('picsousApp').controller('PermCtrl', function($routeParams, casCo
 	};
 
 	$scope.updateArticle = function(article) {
-		return $http({
-			method: 'GET',
-			url: APP_URL + '/updatearticle/' + article.id + '/',
-		}).then(function(response) {
+		serviceAjax.get('updatearticle/' + article.id + '/').then(function(response) {
 			article.ventes = response.data;
 			article.ventes_last_update = new Date();
 			$scope.salesInfo = null;
@@ -264,17 +231,13 @@ angular.module('picsousApp').controller('PermCtrl', function($routeParams, casCo
 
 	$scope.addArticle = function() {
 		$scope.addingArticle = true;
-		$http({
-			method: 'POST',
-			url: APP_URL + '/perm/articles/',
-			data: $scope.newArticle
-		}).then(function(response) {
+		serviceAjax.post('perm/articles/', $scope.newArticle).then(function(response) {
 			$scope.addingArticle = false;
 			$scope.createArticle = false;
 			$scope.newArticle.id = response.data.id;
 			$scope.perm.article_set.push(angular.copy($scope.newArticle));
-			$scope.newArticle = { perm: $routeParams.id, tva: 5.5 };
 			message.success('Article ' + $scope.newArticle.nom + ' bien ajouté à Picsous !');
+			$scope.newArticle = { perm: $routeParams.id, tva: 5.5 };
 		}, function() {
 			$scope.addingArticle = false;
 		});
