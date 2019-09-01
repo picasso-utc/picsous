@@ -2,14 +2,11 @@
 
 /* global confirm */
 
-angular.module('picsousApp').controller('FactureRecueCtrl', function($routeParams, dateWrapper, message, objectStates, tva, $http, $scope, $location, APP_URL, serverGetter) {
+angular.module('picsousApp').controller('FactureRecueCtrl', function($routeParams, serviceAjax, dateWrapper, message, objectStates, tva, $scope, $location) {
 	$scope.tva = tva;
 
 	var getFacturePerm = function() {
-		$http({
-			method: 'GET',
-			url: APP_URL + '/creneau/' + $scope.facture.perm + '/',
-		}).then(function(response) {
+		serviceAjax.get('creneau/' + $scope.facture.perm + '/').then(function(response) {
 			$scope.permName = response.data.perm.nom;
 			var tDate = new Date(response.data.date);
 			$scope.permDate = dateWrapper.DateToSimpleStringDate(tDate);
@@ -17,7 +14,7 @@ angular.module('picsousApp').controller('FactureRecueCtrl', function($routeParam
 	};
 
 	var getFacture = function() {
-		serverGetter.factureRecueGetter($routeParams.id).then(function(response) {
+		serviceAjax.get('facture/recue/' + $routeParams.id).then(function(response) {
 			$scope.facture = response.data;
 			$scope.facture.tva_complete = false;
 			if ($scope.facture.perm) {
@@ -31,10 +28,7 @@ angular.module('picsousApp').controller('FactureRecueCtrl', function($routeParam
 		$scope.changingPerm = true;
 		$scope.oldPerm = $scope.facture.perm;
 		$scope.loadingPerms = true;
-		$http({
-			method: 'GET',
-			url: APP_URL + '/creneau/'
-		}).then(function(response) {
+		serviceAjax.get('creneau/').then(function(response) {
 			$scope.allPerms = response.data;
 			$scope.allPerms.forEach(function(perm) {
 				var date = new Date(perm.date);
@@ -50,14 +44,11 @@ angular.module('picsousApp').controller('FactureRecueCtrl', function($routeParam
 	};
 
 	$scope.saveChangingPerm = function() {
-		$http({
-			method: 'PATCH',
-			url: APP_URL + '/facture/recue/' + $routeParams.id + '/',
-			data: {
-				id: $routeParams.id,
-				perm: $scope.facture.perm,
-			}
-		}).then(function() {
+		const data = {
+			id: $routeParams.id,
+			perm: $scope.facture.perm,
+		}
+		serviceAjax.patch('facture/recue/' + $routeParams.id + '/', data).then(function() {
 			getFacturePerm();
 			message.success('Perm bien modifiée !');
 			$scope.changingPerm = false;
@@ -68,11 +59,7 @@ angular.module('picsousApp').controller('FactureRecueCtrl', function($routeParam
 		if (!confirm('Voulez-vous vraiment supprimer cette facture ?')) {
 			return;
 		}
-		$http({
-			method: 'DELETE',
-			// url: APP_URL + '/deletefacturerecue/' + $routeParams.id + '/',
-			url: APP_URL + '/facture/recue/' + $routeParams.id + '/',
-		}).then(function() {
+		serviceAjax.delete('facture/recue/' + $routeParams.id + '/').then(function() {
 			$location.path('/facturesrecues');
 		});
 	}
@@ -115,11 +102,7 @@ angular.module('picsousApp').controller('FactureRecueCtrl', function($routeParam
 		var newFacture = angular.copy($scope.facture);
 		delete newFacture.new_tva;
 		delete newFacture.cheque_set;
-		$http({
-			method: 'PUT',
-			url: APP_URL + '/facture/recue/' + $routeParams.id + '/',
-			data: newFacture,
-		}).then(function() {
+		serviceAjax.put('facture/recue/' + $routeParams.id + '/', newFacture).then(function() {
 			$scope.modifyingFacture = false;
 			message.success('Facture bien modifiée !');
 		});
@@ -127,11 +110,7 @@ angular.module('picsousApp').controller('FactureRecueCtrl', function($routeParam
 
 	$scope.addCheque = function() {
 		$scope.newCheque.facturerecue = $scope.facture.id;
-		$http({
-			method: 'POST',
-			url: APP_URL + '/facture/cheque/',
-			data: $scope.newCheque
-		}).then(function(response) {
+		serviceAjax.post('facture/cheque/', $scope.newCheque).then(function(response) {
 			if (!$scope.facture.cheque_set) {
 				$scope.facture.cheque_set = [];
 			}
@@ -147,10 +126,7 @@ angular.module('picsousApp').controller('FactureRecueCtrl', function($routeParam
 	};
 
 	var getCategories = function() {
-		$http({
-			method: 'GET',
-			url: APP_URL + '/facture/categories/',
-		}).then(function(response) {
+		serviceAjax.get('facture/categories/').then(function(response) {
 			$scope.categories = response.data;
 		});
 	};
