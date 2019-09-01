@@ -231,12 +231,12 @@ angular.module('picsousApp').controller('PermCtrl', function($routeParams, casCo
 		});
 	};
 
-	$scope.updateArticle = function(article) {
-		serviceAjax.get('updatearticle/' + article.id + '/').then(function(response) {
-			article.ventes = response.data;
+	$scope.updateArticleSales = function(article) {
+		serviceAjax.get('perms/sales/article/' + article.id).then(function(response) {
+			article.ventes = response.data.sales;
 			article.ventes_last_update = new Date();
 			$scope.salesInfo = null;
-			message.success('Article mis à jour. Ventes de l\'article : ' + response.data + ' ventes.');
+			message.success('Article mis à jour. Ventes de l\'article : ' + response.data.sales + ' ventes.');
 		});
 	}
 
