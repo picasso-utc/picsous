@@ -39,6 +39,9 @@ angular.module('picsousApp')
             put: function(path, object){
                 return $http.put(API_URL + '/' + path, object, {withCredentials: true});
             },
+            patch: function(path, object){
+                return $http.patch(API_URL + '/' + path, object, {withCredentials: true});
+            },
             delete : function(path){
                 return $http.delete(API_URL + '/' + path, {withCredentials: true});
             }
