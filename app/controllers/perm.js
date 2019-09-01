@@ -50,6 +50,7 @@ angular.module('picsousApp').controller('PermCtrl', function($routeParams, casCo
 			nom: article.nom,
 			prix: article.prix,
 			tva: article.tva,
+			perm: article.perm,
 		};
 		var endpoint = 'perm/articles';
 		if (hardModifications)  {
