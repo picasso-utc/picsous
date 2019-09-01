@@ -2,11 +2,10 @@
 
 /* global confirm */
 
-angular.module('picsousApp').controller('VATAnalysisCtrl', function($http, APP_URL, $scope, dateWrapper, message) {
-	$http({
-		method: 'GET',
-		url: APP_URL + '/periodetva/'
-	}).then(function(response) {
+angular.module('picsousApp').controller('VATAnalysisCtrl', function(serviceAjax, API_URL, $scope, dateWrapper, message) {
+
+
+	serviceAjax.get('periodetva/').then(function(response) {
 		$scope.periods = response.data;
 	});
 	$scope.newPeriod = {};
@@ -35,11 +34,8 @@ angular.module('picsousApp').controller('VATAnalysisCtrl', function($http, APP_U
 		var period = angular.copy($scope.newPeriod);
 		period.debut = dateWrapper.DateToStringDate(period.debut);
 		period.fin = dateWrapper.DateToStringDate(period.fin);
-		$http({
-			method: 'POST',
-			url: APP_URL + '/periodetva/',
-			data: period,
-		}).then(function(response) {
+		console.log(period)
+		serviceAjax.post('periodetva/', period).then(function(response) {
 			message.success('Période bien ajoutée !');
 			$scope.periods.push(response.data);
 			$scope.addingVatPeriod = false;
@@ -65,10 +61,7 @@ angular.module('picsousApp').controller('VATAnalysisCtrl', function($http, APP_U
 	$scope.analysis = function(period) {
 		$scope.analysisResult = null;
 		$scope.analysisUndergoing = true;
-		$http({
-			method: 'GET',
-			url: APP_URL + '/tvainfo/' + period.id,
-		}).then(function(response) {
+		serviceAjax.get('treso/tvainfo/' + period.id).then(function(response) {
 			$scope.analyzedPeriod = period;
 			$scope.analysisUndergoing = false;
 			$scope.analysisResult = response.data;
@@ -82,10 +75,6 @@ angular.module('picsousApp').controller('VATAnalysisCtrl', function($http, APP_U
 			return;
 		}
 		vatperiod.state = 'D';
-		$http({
-			method: 'PUT',
-			url: APP_URL + '/periodetva/' + vatperiod.id + '/',
-			data: vatperiod,
-		});
+		serviceAjax.put('periodetva/' + vatperiod.id + '/', vatperiod)
 	};
 });
