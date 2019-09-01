@@ -18,7 +18,7 @@
         <td><a href="" ng-click="editCredit()"><i class="glyphicon glyphicon-pencil"></i></a></td>
       </tr>
       <tr ng-show="editingCredit">
-        <td><input type="text" ng-model="solde" class="form-control" /></td>
+        <td><input type="number" ng-model="solde" class="form-control" /></td>
         <td><button class="btn btn-primary" ng-click="saveCreditEdit()">Sauver</button> <button ng-click="cancelCreditEdit()" class="btn btn-danger">Annuler</button></td>
       </tr>
     </table>
@@ -36,12 +36,12 @@
         <td ng-hide="reversement.editing">{{ reversement.prix }} €</td>
         <td ng-hide="reversement.editing">{{ reversement.date_effectue | date }}</td>
         <td ng-hide="reversement.editing"><a href="" ng-click="editReversement(reversement)"><i class="glyphicon glyphicon-pencil"></i></a></td>
-        <td ng-show="reversement.editing"><input type="text" ng-disabled="reversement.saving" class="form-control" ng-model="reversement.prix" /></td>
+        <td ng-show="reversement.editing"><input type="number" ng-disabled="reversement.saving" class="form-control" ng-model="reversement.prix" /></td>
         <td ng-show="reversement.editing"><date-input ng-model="reversement.date_effectue"></date-input></td>
         <td ng-show="reversement.editing"><button ng-click="saveReversement(reversement)" class="btn btn-primary">Sauver</button> <button class="btn btn-danger">Annuler</button></td>
       </tr>
       <tr>
-        <td><input class="form-control" type="text" ng-model="newR.prix" /></td>
+        <td><input class="form-control" type="number" ng-model="newR.prix" /></td>
         <td><date-input ng-model="newR.date_effectue"></date-input></td>
         <td><button ng-click="saveReversement(newR)" class="btn btn-primary">Ajouter</button></td>
       </tr>
