@@ -1,9 +1,8 @@
 'use strict';
 
-angular.module('picsousApp').controller('PermCtrl', function($routeParams, casConnectionCheck, serviceAjax, objectStates, $http, APP_URL, $scope, message, dateWrapper, superadmin, serverGetter) {
+angular.module('picsousApp').controller('PermCtrl', function($routeParams, casConnectionCheck, serviceAjax, objectStates, API_URL, $scope, message, dateWrapper) {
 	$scope.app_url = APP_URL;
 	$scope.categories = [];
-	$scope.superadmin = superadmin;
 
 	$scope.isAdmin = function() {
 		return casConnectionCheck.isAdmin();
@@ -50,7 +49,7 @@ angular.module('picsousApp').controller('PermCtrl', function($routeParams, casCo
 			nom: article.nom,
 			prix: article.prix,
 			tva: article.tva,
-			perm: article.perm,
+			perm: article.creneau,
 		};
 		var endpoint = 'perm/articles';
 		if (hardModifications)  {
@@ -100,7 +99,7 @@ angular.module('picsousApp').controller('PermCtrl', function($routeParams, casCo
 
 	serviceAjax.get('creneau/' + $routeParams.id + '/').then(function(response){
 		$scope.perm = response.data;
-		$scope.newArticle.perm = $scope.perm.id;
+		$scope.newArticle.creneau = $scope.perm.id;
 		$scope.perm.state = $scope.getState($scope.perm);
 		assignTva()
 	});
