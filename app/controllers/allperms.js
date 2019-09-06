@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('picsousApp').controller('AllPermsCtrl', function($scope, NgTableParams, serverGetter, objectStates) {
+angular.module('picsousApp').controller('AllPermsCtrl', function($scope, objectStates, serviceAjax) {
 	$scope.perms = [];
 	$scope.filters = {
 		traite: true,
@@ -9,7 +9,7 @@ angular.module('picsousApp').controller('AllPermsCtrl', function($scope, NgTable
 	};
 	
 	var init = function() {
-		serverGetter.permsGetter().then(function(response) {
+		serviceAjax.get('creneau').then(function(response) {
 			$scope.perms = response.data;
 			$scope.perms.forEach(function(perm) {
 				perm.perm.state = $scope.getState(perm.perm);
