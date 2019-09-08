@@ -66,7 +66,7 @@ angular.module('picsousApp').factory('casConnectionCheck', function($window, $q,
 		if (logged()) {
 			return $q.all();
 		} else {
-			return serviceAjax('auth/me');
+			return serviceAjax.get('auth/me');
 		}
 	};
 
@@ -120,7 +120,7 @@ angular.module('picsousApp').factory('casConnectionCheck', function($window, $q,
 		*/
 		return $q(function(resolve, failPromise) {
 
-			serviceAjax('auth/me').then(function(response){
+			serviceAjax.get('auth/me').then(function(response){
 				if (response) {
 					if (response.data.authenticated && (response.data.right == "A" || response.data.right == "M")) {
 						saveSessionStorage(response.data);	
