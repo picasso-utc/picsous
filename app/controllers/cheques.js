@@ -8,7 +8,7 @@ angular.module('picsousApp').controller('ChequesCtrl', function ($scope, casConn
   	$scope.chequesUrl = API_URL + '/generate/cheques?val=' + (new Date().getTime())
 
 	var loadCheques = function() {
-		serviceAjax.get('facture/cheque').then(function(response) {
+		serviceAjax.get('facture/cheque/').then(function(response) {
 			$scope.cheques = response.data;
 		});
 	};

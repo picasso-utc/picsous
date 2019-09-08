@@ -23,7 +23,7 @@ angular.module('picsousApp').controller('BankSimulationCtrl', function ($scope, 
 
   $scope.reversements = []
 
-  serviceAjax.get('facture/reversements').then(function (response) {
+  serviceAjax.get('facture/reversements/').then(function (response) {
     $scope.reversements = response.data
   })
 

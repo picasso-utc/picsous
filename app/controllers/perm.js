@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('picsousApp').controller('PermCtrl', function($routeParams, casConnectionCheck, serviceAjax, objectStates, API_URL, $scope, message, dateWrapper) {
-	$scope.app_url = APP_URL;
+	$scope.app_url = API_URL;
 	$scope.categories = [];
 
 	$scope.isAdmin = function() {

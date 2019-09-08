@@ -4,7 +4,7 @@
 
 angular.module('picsousApp').controller('FactureEmiseCtrl', function($routeParams, message, objectStates, API_URL, $scope, serviceAjax) {
 
-	serviceAjax.get('facture/emise/' + $routeParams.id).then(function(response) {
+	serviceAjax.get('facture/emise/' + $routeParams.id + '/').then(function(response) {
 		$scope.facture = response.data;
 	});
 

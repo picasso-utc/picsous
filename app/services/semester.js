@@ -10,7 +10,7 @@ angular.module('picsousApp').factory('semester', function(serviceAjax, $route, c
     var semesters = [];
     // Fonction permettant de mettre à jour la liste des semestres.
     var getSemesters = function() {
-        return serviceAjax.get('semesters').then(function(response) {
+        return serviceAjax.get('semesters/').then(function(response) {
             semesters.length = 0;
             response.data.forEach(function(s) {
                 semesters.push(s);

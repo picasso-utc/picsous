@@ -14,7 +14,7 @@ angular.module('picsousApp').controller('FactureRecueCtrl', function($routeParam
 	};
 
 	var getFacture = function() {
-		serviceAjax.get('facture/recue/' + $routeParams.id).then(function(response) {
+		serviceAjax.get('facture/recue/' + $routeParams.id + '/').then(function(response) {
 			$scope.facture = response.data;
 			$scope.facture.tva_complete = false;
 			if ($scope.facture.perm) {
