@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('picsousApp').factory('casConnectionCheck', function($window, $q, serviceAjax, localStorageService) {
+angular.module('picsousApp').factory('casConnectionCheck', function($window, $q, API_URL, serviceAjax, localStorageService) {
 	/*
 		Module de gestion de la connexion de l'utilisateur
 	*/
