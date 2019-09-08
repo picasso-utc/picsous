@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('picsousApp').factory('casConnectionCheck', function($http, $window, $q, localStorageService) {
+angular.module('picsousApp').factory('casConnectionCheck', function($window, $q, serviceAjax, localStorageService) {
 	/*
 		Module de gestion de la connexion de l'utilisateur
 	*/
@@ -66,11 +66,7 @@ angular.module('picsousApp').factory('casConnectionCheck', function($http, $wind
 		if (logged()) {
 			return $q.all();
 		} else {
-			return $http({
-				url: 'http://localhost:8000/api/auth/me',
-				method: 'GET',
-				withCredentials: true,
-			})
+			return serviceAjax('auth/me');
 		}
 	};
 
@@ -124,11 +120,7 @@ angular.module('picsousApp').factory('casConnectionCheck', function($http, $wind
 		*/
 		return $q(function(resolve, failPromise) {
 
-			$http({
-				url: 'http://localhost:8000/api/auth/me',
-				method: 'GET',
-				withCredentials: true,
-			}).then(function(response){
+			serviceAjax('auth/me').then(function(response){
 				if (response) {
 					if (response.data.authenticated && (response.data.right == "A" || response.data.right == "M")) {
 						saveSessionStorage(response.data);	
