@@ -93,7 +93,7 @@ angular.module('picsousApp').factory('casConnectionCheck', function($http, $wind
 	var sendToCAS = function(originalUrl) {
 		// Fonction retournant l'utilisateur vers le serveur CAS pour une authentification
 		// L'URL du service est définie en paramètre
-		$window.location.href = "http://localhost:8000/api/auth/login?redirect=" + originalUrl;
+		$window.location.href = API_URL + "/auth/login?redirect=" + originalUrl;
 	};
 
 
