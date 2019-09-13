@@ -98,14 +98,20 @@ angular.module('picsousApp').controller('FactureRecueCtrl', function($routeParam
 	};
 
 	$scope.saveFacture = function() {
-		$scope.facture.tva = tva.getVATPercentageFromTTCAndVAT($scope.facture.prix, $scope.facture.new_vat);
-		var newFacture = angular.copy($scope.facture);
-		delete newFacture.new_tva;
-		delete newFacture.cheque_set;
-		serviceAjax.put('facture/recue/' + $routeParams.id + '/', newFacture).then(function() {
-			$scope.modifyingFacture = false;
-			message.success('Facture bien modifiée !');
-		});
+		const tva_percentage = tva.getVATPercentageFromTTCAndVAT($scope.facture.prix, $scope.facture.new_vat);
+		if (isFinite(tva_percentage)) {
+			$scope.facture.tva = tva_percentage
+			var newFacture = angular.copy($scope.facture);
+			delete newFacture.new_tva;
+			delete newFacture.cheque_set;
+			serviceAjax.put('facture/recue/' + $routeParams.id + '/', newFacture).then(function() {
+				$scope.modifyingFacture = false;
+				message.success('Facture bien modifiée !');
+			});
+		} else {
+			message.error('Pourcentage TVA aberrant ! ')
+		}
+		
 	};
 
 	$scope.addCheque = function() {

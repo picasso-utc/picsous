@@ -83,25 +83,33 @@ angular.module('picsousApp').controller('FacturesRecuesCtrl', function (API_URL,
 
 	$scope.addFacture = function(keep) {
 		var newFacture = angular.copy($scope.newFacture);
-		newFacture.date = dateWrapper.DateToStringDate(newFacture.date);
-		if (newFacture.date_paiement) {
-			newFacture.date_paiement = dateWrapper.DateToStringDate(newFacture.date_paiement);
-		}
-		if (newFacture.date_remboursement) {
-			newFacture.date_remboursement = dateWrapper.DateToStringDate(newFacture.date_remboursement);
-		}
 		var prixHT = newFacture.prix - newFacture.tva_complete;
 		var pourcentage_tva = (newFacture.tva_complete / prixHT) * 100;
-		newFacture.tva = pourcentage_tva.toFixed(2);
-		delete newFacture.tva_complete;
-		serviceAjax.post('facture/recue/', newFacture).then(function(response) {
-			$scope.factures.push(response.data);
-			$scope.newFacture = {};
-			if (!keep) {
-				$scope.addingFacture = false;
+		
+
+		if (isFinite(pourcentage_tva)) {
+			newFacture.tva = pourcentage_tva.toFixed(2);
+			newFacture.date = dateWrapper.DateToStringDate(newFacture.date);
+			if (newFacture.date_paiement) {
+				newFacture.date_paiement = dateWrapper.DateToStringDate(newFacture.date_paiement);
 			}
-			message.success('Facture bien ajoutée !');
-		});
+			if (newFacture.date_remboursement) {
+				newFacture.date_remboursement = dateWrapper.DateToStringDate(newFacture.date_remboursement);
+			}
+			
+			delete newFacture.tva_complete;
+			serviceAjax.post('facture/recue/', newFacture).then(function(response) {
+				$scope.factures.push(response.data);
+				$scope.newFacture = {};
+				if (!keep) {
+					$scope.addingFacture = false;
+				}
+				message.success('Facture bien ajoutée !');
+			});
+		} else {
+			message.error('Pourcentage TVA aberrant ! ')
+		}
+			
 	};
 
 	$scope.modifyState = function(fac) {
