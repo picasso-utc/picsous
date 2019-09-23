@@ -34,8 +34,8 @@
 			<tr ng-show="modifyingFacture">
 				<td><input type="text" class="form-control" ng-model="facture.nom_entreprise" /></td>
 				<td>{{facture.date | date}}</td>
-				<td><input type="text" class="form-control" ng-model="facture.prix" /></td>
-				<td><input type="text" class="form-control" ng-model="facture.new_vat" /></td>
+				<td><input type="number" step="0.01" class="form-control" ng-model="facture.prix" /></td>
+				<td><input type="number" step="0.01" class="form-control" ng-model="facture.new_vat" /></td>
 				<td><input type="text" class="form-control" ng-model="facture.date_paiement" /></td>
 				<td><input type="text" class="form-control" ng-model="facture.personne_a_rembourser" /></td>
 				<td><input type="text" class="form-control" ng-model="facture.date_remboursement" /></td>
@@ -99,7 +99,7 @@
 					</div>
 					<div class="form-group col-md-2">
 						<label>Valeur</label>
-						<input type="number" class="form-control" ng-model="newCheque.valeur" />
+						<input type="number" step="0.01" class="form-control" ng-model="newCheque.valeur" />
 					</div>
 					<div class="form-group col-md-2">
 						<label>Numéro de talon</label>

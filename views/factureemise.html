@@ -70,8 +70,8 @@
 					</tr>
 					<tr ng-show="addingElement">
 						<td><input type="text" ng-model="newElement.nom" class="form-control" /></td>
-						<td><input type="number" ng-model="newElement.prix" class="form-control" /></td>
-						<td><input type="number" ng-model="newElement.tva" class="form-control" /></td>
+						<td><input type="number" step="0.01" ng-model="newElement.prix" class="form-control" /></td>
+						<td><input type="number" step="0.01" ng-model="newElement.tva" class="form-control" /></td>
 						<td><input type="number" ng-model="newElement.qty" class="form-control" /></td>
 						<td><a href="" ng-click="saveNewElement()">Enregistrer</a> | <a href="" ng-click="addingElement = false">Annuler</a></td>
 					</tr>
