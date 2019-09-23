@@ -128,7 +128,7 @@ angular.module('picsousApp').controller('FacturesRecuesCtrl', function (API_URL,
 
 	$scope.sendState = function(fac) {
 		fac.updating = true;
-		serviceAjax.patch('facture/recue/' + fac.id + '/', data).then(function() {
+		serviceAjax.patch('facture/recue/' + fac.id + '/', {etat: fac.etat}).then(function() {
 			fac.updating = false;
 			fac.modifyingState = false;
 			message.success('État de la facture modifié !');
