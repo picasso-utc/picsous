@@ -45,7 +45,7 @@
 			</thead>
 			<!-- <tr ng-repeat="perm in perms | orderBy:'date':true | filter:filters.searchField"> -->
 			<tr ng-repeat="perm in getPerms(filters) | orderBy:'date':true | filter:filters.searchField">
-				<td><a href="#/perm/{{perm.id}}">{{ perm.perm.nom }}</a></td>
+				<td><a href="#/perm/{{perm.id}}" target="_blank">{{ perm.perm.nom }}</a></td>
 				<td>{{ perm.date | date }}</td>
 				<td>{{ perm.creneau === 'S' ? 'Soir' : (perm.creneau === 'M' ? 'Matin' : 'Déjeuner') }}</td>
 				<td>{{ perm.perm.asso ? 'Association' : 'Groupe de potes' }}</td>
