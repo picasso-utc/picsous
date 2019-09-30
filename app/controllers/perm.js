@@ -108,7 +108,7 @@ angular.module('picsousApp').controller('PermCtrl', function($routeParams, casCo
 		if ($scope.perm.state == 'T') {
 			$scope.perm.state = 'N';
 			$scope.perm.traitee = false;
-		} else if ($scope.perm.state == 'N') {
+		} else if ($scope.perm.state == 'N' || ($scope.perm.state == 'V' && $scope.perm.perm.asso)) {
 			$scope.perm.state = 'T';
 			$scope.perm.traitee = true;
 		}
