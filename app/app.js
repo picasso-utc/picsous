@@ -63,9 +63,13 @@ angular.module('picsousApp', [
 			redirectTo: '/'
 		});
 
-		$httpProvider.interceptors.push(function($q, loadingSpin) {
+		$httpProvider.interceptors.push(function($q, loadingSpin, semester) {
 			return {
 				request: function(config) {
+					if (semester.currentSemester()) {
+						config.url += '?semestre=' + semester.currentSemester(); 
+					}
+			
 					// var requestToken = token.getToken();
 					// if (requestToken) {
 					// 	config.headers.Authorization = 'Token ' + token.getToken();
