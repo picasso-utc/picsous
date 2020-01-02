@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('picsousApp').factory('semester', function(serviceAjax, $route, casConnectionCheck) {
+angular.module('picsousApp').factory('semester', function(serviceAjax, $route, casConnectionCheck, localStorageService) {
     /*
     Module permettant de gérer le semestre actuel, et de changer de semestre à
     la volée.
@@ -26,9 +26,11 @@ angular.module('picsousApp').factory('semester', function(serviceAjax, $route, c
     - si currentSemester vaut "all", on considère qu'on veut charger la data de tous les semestres 
     */
     var currentSemester = null;
+    localStorageService.set("semester", null)
     // Fonction permettant de changer le semestre actuel.
     var setSemester = function(id) {
         currentSemester = id;
+        localStorageService.set("semester", id)
         $route.reload();
     };
 

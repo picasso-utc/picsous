@@ -63,11 +63,12 @@ angular.module('picsousApp', [
 			redirectTo: '/'
 		});
 
-		$httpProvider.interceptors.push(function($q, loadingSpin, semester) {
+		$httpProvider.interceptors.push(function($q, loadingSpin, localStorageService) {
 			return {
 				request: function(config) {
-					if (semester.currentSemester()) {
-						config.url += '?semestre=' + semester.currentSemester(); 
+					const semester = localStorageService.get("semester")
+					if (semester) {
+						config.url += '?semestre=' + semester; 
 					}
 			
 					// var requestToken = token.getToken();
