@@ -248,7 +248,15 @@ angular.module('picsousApp').controller('PermCtrl', function($routeParams, casCo
 			$scope.perm.article_set.push(angular.copy($scope.newArticle));
 			message.success('Article ' + $scope.newArticle.nom + ' bien ajouté à Picsous !');
 			$scope.newArticle = { perm: $routeParams.id, tva: 5.5 };
-		}, function() {
+		}, function(error) {
+			if (error.status == 400) {
+				var key_errors = Object.keys(error.data)
+				var error_message = ""
+				for (let index = 0; index < key_errors.length; index++) {
+					error_message+= key_errors[index] + ": " + error.data[key_errors[index]] + "\n ";
+				}
+				message.error(error_message)
+			} 
 			$scope.addingArticle = false;
 		});
 	}
