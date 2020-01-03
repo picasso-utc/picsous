@@ -4,6 +4,14 @@ angular.module('picsousApp').controller('PermCtrl', function($routeParams, casCo
 	$scope.app_url = API_URL;
 	$scope.categories = [];
 
+
+	var initNewFacture = function(){
+		const current_date = new Date();
+		$scope.newFacture = {}
+		$scope.newFacture.date = current_date;
+	}
+	initNewFacture();
+
 	$scope.isAdmin = function() {
 		return casConnectionCheck.isAdmin();
 	};
@@ -211,7 +219,7 @@ angular.module('picsousApp').controller('PermCtrl', function($routeParams, casCo
 		serviceAjax.post('facture/recue/', newFacture)
 		.then(function(response) {
 			$scope.perm.facturerecue_set.push(response.data);
-			$scope.newFacture = {};
+			initNewFacture();
 			$scope.addingFacture = false;
 			message.success('Facture bien ajoutée !');
 		}, function(error){
