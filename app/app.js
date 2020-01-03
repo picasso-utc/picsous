@@ -70,19 +70,7 @@ angular.module('picsousApp', [
 					if (semester) {
 						config.url += '?semestre=' + semester; 
 					}
-			
-					// var requestToken = token.getToken();
-					// if (requestToken) {
-					// 	config.headers.Authorization = 'Token ' + token.getToken();
-					// } 
 					loadingSpin.start();
-					// if (config.url.search(APP_URL) !== '-1' && config.url.search('.html') !== '-1') {
-					// 	if (config.url.indexOf('?') !== -1) {
-					// 		config.url += '&randValue=' + Math.random()*10000000000000000000000;
-					// 	} else {
-					// 		config.url += '?randValue=' + Math.random()*10000000000000000000000;
-					// 	}
-					// }
 					return config;
 				},
 
@@ -93,15 +81,9 @@ angular.module('picsousApp', [
 
 				responseError: function(response) {
 					loadingSpin.end();
-					// To DO ajouter une redirection vers login quand erreur 403 ou 401
-					// if (response.config.url.search('autocomplete') !== -1) {
-					// 	return;
-					// }
-					// if (response.data){
-					// 	message.error(response.data.detail || (response.data.error ? (response.data.error.message || response.data.error.code) : false) || 'Une erreur est survenue.');
-					// } else {
-					// 	message.error('Impossible de se connecter au serveur.');
-					// }
+					if (message.status && message.status >= 500) {
+						message.error("Problème serveur, contacter un administrateur.");
+					}
 					return $q.reject(response);
 				}
 			}
