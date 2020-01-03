@@ -202,6 +202,28 @@ angular.module('picsousApp').controller('PermCtrl', function($routeParams, casCo
 
 	$scope.addFacture = function() {
 		var newFacture = angular.copy($scope.newFacture);
+		var fields_errors = []
+		if (!newFacture.prix) {
+			fields_errors.push("Prix requis")
+		} else if (!parseFloat(newFacture.prix)){
+			fields_errors.push("Prix mauvais format")
+		} else if (!newFacture.tva_complete) {
+			fields_errors.push("TVA requise")
+		} else if (newFacture.prix - newFacture.tva_complete <= 0) {
+			fields_errors.push("Prix et TVA incohérents")
+		}
+		if (fields_errors.length > 0) {
+			var error_message = ""
+			for (let index = 0; index < fields_errors.length; index++) {
+				error_message += fields_errors[index];
+				if (index != fields_errors.length - 1) {
+					error_message += ", "
+				}
+			}
+			message.error(error_message);
+			return;
+		}
+		
 		newFacture.date = dateWrapper.DateToStringDate(newFacture.date);
 		if (newFacture.date_paiement) {
 			newFacture.date_paiement = dateWrapper.DateToStringDate(newFacture.date_paiement);
