@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('picsousApp').controller('AllPermsCtrl', function($scope, objectStates, serviceAjax) {
+angular.module('picsousApp').controller('AllPermsCtrl', function($scope, objectStates, serviceAjax, API_URL) {
 	$scope.perms = [];
 	$scope.filters = {
 		traite: true,
@@ -42,6 +42,10 @@ angular.module('picsousApp').controller('AllPermsCtrl', function($scope, objectS
 		}
 		return 'N';
 	};
+
+	$scope.openConvention = function(){
+		window.open(API_URL + "/treso/conventions")
+	}
 
 	$scope.stateLabel = objectStates.permStateLabel;
 	$scope.stateString = objectStates.permState;
