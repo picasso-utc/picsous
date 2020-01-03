@@ -233,7 +233,7 @@ angular.module('picsousApp').controller('PermCtrl', function($routeParams, casCo
 		}
 		var prixHT = newFacture.prix - newFacture.tva_complete;
 		var pourcentage_tva = (newFacture.tva_complete / prixHT) * 100;
-		newFacture.tva = pourcentage_tva.toFixed(2);
+		newFacture.tva = pourcentage_tva.toFixed(6);
 		newFacture.perm = $routeParams.id;
 		delete newFacture.tva_complete;
 
