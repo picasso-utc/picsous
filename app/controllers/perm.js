@@ -246,6 +246,14 @@ angular.module('picsousApp').controller('PermCtrl', function($routeParams, casCo
 			message.success('Facture bien ajoutée !');
 		}, function(error){
 			console.log(error)
+			if (error.status == 400) {
+				var key_errors = Object.keys(error.data)
+				var error_message = ""
+				for (let index = 0; index < key_errors.length; index++) {
+					error_message+= key_errors[index] + ": " + error.data[key_errors[index]] + "\n ";
+				}
+				message.error(error_message)
+			} 
 		});
 	};
 
