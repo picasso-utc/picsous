@@ -9,7 +9,7 @@ angular.module('picsousApp').factory('message', function() {
 			}
 			$.notify(options, {
 				type: type,
-				delay: 3000,
+				delay: 8000,
 			});
 		},
 		success: function(message) {
