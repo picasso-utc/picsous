@@ -73,7 +73,9 @@ angular.module('picsousApp').controller('PermCtrl', function($routeParams, casCo
 				delete article.hardModifying;
 			}
 			message.success('Article bien modifié !');
-		});
+		}, function(error){
+			message.error("Problème lors de la mise à jour...")
+		});;
 	};
 
 	$scope.factureRecueStateLabel = objectStates.factureRecueStateLabel;
@@ -173,10 +175,13 @@ angular.module('picsousApp').controller('PermCtrl', function($routeParams, casCo
 		delete sendPerm.article_set;
 		delete sendPerm.facturerecue_set;
 		delete sendPerm.traitee;
-		serviceAjax.put('creneau/' + $routeParams.id + '/', sendPerm).then(function() {
+		serviceAjax.put('creneau/' + $routeParams.id + '/', sendPerm).then(function(res) {
 			$scope.perm.state = $scope.getState($scope.perm);
 			message.success('Perm bien modifiée !');
-		});
+		},function(error){
+			console.log(error)
+			message.error("Problème lors de la mise à jour...")
+		});;
 	};
 
 	$scope.cancelModifyPerm = function() {
