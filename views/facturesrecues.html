@@ -110,7 +110,7 @@
 		          			</p>
 						</div>
 						<div class="form-group col-md-3">
-							<label>Catégorie (<a href="#/facturesrecues">+</a>)</label>
+							<label>Catégorie (<a href="#!/facturesrecues">+</a>)</label>
 							<select class="form-control" ng-model="newFacture.categorie" ng-options="category.id as category.nom for category in categories">
 							</select>
 						</div>
@@ -191,7 +191,7 @@
 				</tr>
 			</thead>
 			<tr ng-repeat="facture in getFactures() | orderBy:'-date' | filter:searchField">
-				<td><a href="#/facturesrecues/{{facture.id}}">Fac. {{ getCategoryCode(facture.categorie) + facture.id }}</a></td>
+				<td><a href="#!/facturesrecues/{{facture.id}}">Fac. {{ getCategoryCode(facture.categorie) + facture.id }}</a></td>
 				<td>{{ facture.nom_entreprise }}</td>
 				<td>{{ facture.date | date }}</td>
 				<td>{{ facture.date_paiement | date }}</td>
@@ -209,7 +209,7 @@
 				</td>
 				<td ng-hide="facture.modifyingState"><span class="label" ng-class="stateLabel(facture.etat)">{{ state(facture.etat) }}</span> <a href="" ng-click="modifyState(facture)" class="glyphicon glyphicon-pencil"></a></td>
 				<td>{{ (facture.personne_a_rembourser) || '--' }}</td>
-				<td><a ng-show="facture.perm" href="#/perm/{{facture.perm}}">Détails</a><span ng-hide="facture.perm">--</span></td>
+				<td><a ng-show="facture.perm" href="#!/perm/{{facture.perm}}">Détails</a><span ng-hide="facture.perm">--</span></td>
 			</tr>
 		</table>
 		<p ng-show="factures.length === 0">Aucune facture.</p>

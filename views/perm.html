@@ -2,7 +2,7 @@
 	<div class="col-md-12">
 		<div class="page-header">
 			<h1>
-				<a href="#/allperms">Perms</a> > {{ perm.nom }}
+				<a href="#!/allperms">Perms</a> > {{ perm.nom }}
 				<span class="pull-right">
 					<button ng-hide="!isAdmin()" class="btn btn-success" ng-click="totalSales()">Obtenir les ventes</button>
 				</span>
@@ -122,7 +122,7 @@
 		          			</p>
 						</div>
 						<div class="form-group col-md-3">
-							<label>Catégorie <span ng-show="isAdmin()">(<a href="#/facturesrecues">+</a>)</span></label>
+							<label>Catégorie <span ng-show="isAdmin()">(<a href="#!/facturesrecues">+</a>)</span></label>
 							<select class="form-control" ng-model="newFacture.categorie" ng-options="category.id as category.nom for category in categories">
 							</select>
 						</div>
@@ -170,7 +170,7 @@
 				</tr>
 			</thead>
 			<tr ng-repeat="facture in perm.facturerecue_set">
-				<td><a href="#/facturesrecues/{{facture.id}}">{{ getCategoryCode(facture.categorie) + facture.id }}</a></td>
+				<td><a href="#!/facturesrecues/{{facture.id}}">{{ getCategoryCode(facture.categorie) + facture.id }}</a></td>
 				<td>{{ facture.nom_entreprise }}</td>
 				<td>{{ facture.date | date }}</td>
 				<td>{{ facture.date_paiement | date }}</td>

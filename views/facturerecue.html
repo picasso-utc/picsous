@@ -1,7 +1,7 @@
 <div class="row">
 	<div class="col-md-12">
 		<div class="page-header">
-			<h1><a href="#/facturesrecues">Factures reçues</a> > <span ng-show="facture">{{ getCategoryCode(facture.categorie, categories) + facture.id + ' ' + (facture.nom_entreprise) }}</span><span ng-show="facture" class="pull-right"><button ng-hide="modifyingFacture" ng-click="modifyFacture()" class="btn btn-primary">Modifier</button> <button ng-hide="modifyingFacture" ng-click="deleteFacture()" class="btn btn-danger">Supprimer</button><button class="btn btn-primary" ng-show="modifyingFacture" ng-click="saveFacture()">Sauvegarder</button> <button class="btn btn-danger" ng-click="cancelModifyingFacture()" ng-show="modifyingFacture">Annuler</button></span></h1>
+			<h1><a href="#!/facturesrecues">Factures reçues</a> > <span ng-show="facture">{{ getCategoryCode(facture.categorie, categories) + facture.id + ' ' + (facture.nom_entreprise) }}</span><span ng-show="facture" class="pull-right"><button ng-hide="modifyingFacture" ng-click="modifyFacture()" class="btn btn-primary">Modifier</button> <button ng-hide="modifyingFacture" ng-click="deleteFacture()" class="btn btn-danger">Supprimer</button><button class="btn btn-primary" ng-show="modifyingFacture" ng-click="saveFacture()">Sauvegarder</button> <button class="btn btn-danger" ng-click="cancelModifyingFacture()" ng-show="modifyingFacture">Annuler</button></span></h1>
 		</div>
 	</div>
 </div>
@@ -57,7 +57,7 @@
 				<td>{{facture.moyen_paiement}}</td>
 				<td><span class="label" ng-class="stateLabel(facture.etat)">{{ state(facture.etat) }}</span></td>
 				<td><input type="checkbox" ng-model="facture.immobilisation" disabled /></td>
-				<td><a href="#/perm/{{facture.perm}}" ng-show="facture.perm">{{ permName + ' (' + permDate + ')' || 'Détails' }}</a><span ng-hide="facture.perm">Pas de perm</span></td>
+				<td><a href="#!/perm/{{facture.perm}}" ng-show="facture.perm">{{ permName + ' (' + permDate + ')' || 'Détails' }}</a><span ng-hide="facture.perm">Pas de perm</span></td>
 			</tr>
 			<tr ng-show="modifyingFacture">
 				<td><input type="text" ng-model="facture.moyen_paiement" class="form-control" /></td>
@@ -72,7 +72,7 @@
 				<td><input type="checkbox" ng-model="facture.immobilisation" /></td>
 
 				<td ng-hide="changingPerm">
-					<a href="#/perm/{{facture.perm}}" ng-show="facture.perm">{{ permName + ' (' + permDate + ')' || 'Détails' }}</a>
+					<a href="#!/perm/{{facture.perm}}" ng-show="facture.perm">{{ permName + ' (' + permDate + ')' || 'Détails' }}</a>
 					<span ng-hide="facture.perm">Pas de perm</span>
 					<button class="btn btn-xs btn-primary" ng-click="changePerm()">Changer</button>
 				</td>
@@ -134,7 +134,7 @@
 						</tr>
 					</thead>
 					<tr ng-repeat="cheque in facture.cheque_set">
-						<td><a href="#/cheques/{{cheque.id}}">{{ cheque.num }}</a></td>
+						<td><a href="#!/cheques/{{cheque.id}}">{{ cheque.num }}</a></td>
 						<td>{{ cheque.destinataire }}</td>
 						<td>{{ cheque.valeur.toFixed(2) }} €</td>
 						<td><span class="label" ng-class="getChequeStateLabel(cheque.state)">{{getChequeState(cheque.state)}}</span></td>

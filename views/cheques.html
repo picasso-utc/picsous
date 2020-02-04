@@ -90,7 +90,7 @@
 				</td>
 				<td>{{(cheque.date_emission | date) || '--'}}</td>
 				<td>{{(cheque.date_encaissement | date) || '--'}}</td>
-				<td><a href="#/facturesrecues/{{cheque.facturerecue}}" ng-show="cheque.facturerecue">Détails</a><span ng-hide="cheque.facturerecue">--</span></td>
+				<td><a href="#!/facturesrecues/{{cheque.facturerecue}}" ng-show="cheque.facturerecue">Détails</a><span ng-hide="cheque.facturerecue">--</span></td>
 			</tr>
 		</table>
 	</div>
