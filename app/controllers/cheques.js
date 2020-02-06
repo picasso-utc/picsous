@@ -5,7 +5,7 @@
 angular.module('picsousApp').controller('ChequesCtrl', function ($scope, casConnectionCheck, API_URL, objectStates, message, serviceAjax) {
   
 	$scope.cas = casConnectionCheck
-  	$scope.chequesUrl = API_URL + '/generate/cheques?val=' + (new Date().getTime())
+  	$scope.chequesUrl = API_URL + '/treso/excel/cheques';
 
 	var loadCheques = function() {
 		serviceAjax.get('facture/cheque/').then(function(response) {
