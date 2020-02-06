@@ -2,7 +2,7 @@
 
 angular.module('picsousApp').controller('FacturesRecuesCtrl', function (API_URL, $scope, tva, message, serviceAjax, dateWrapper, objectStates, casConnectionCheck) {
   $scope.cas = casConnectionCheck
-  $scope.facturesUrl = API_URL + 'treso/excel/factures' 
+  $scope.facturesUrl = API_URL + '/treso/excel/factures' 
   $scope.tva = tva
   $scope.factures = []
   $scope.filters = {
