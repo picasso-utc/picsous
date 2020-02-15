@@ -170,7 +170,7 @@
 				</tr>
 			</thead>
 			<tr ng-repeat="facture in perm.facturerecue_set">
-				<td><a href="#!/facturesrecues/{{facture.id}}">{{ getCategoryCode(facture.categorie) + facture.id }}</a></td>
+				<td><a href="#!/facturesrecues/{{facture.id}}">{{ facture.facture_number }}</a></td>
 				<td>{{ facture.nom_entreprise }}</td>
 				<td>{{ facture.date | date }}</td>
 				<td>{{ facture.date_paiement | date }}</td>

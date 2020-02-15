@@ -191,7 +191,7 @@
 				</tr>
 			</thead>
 			<tr ng-repeat="facture in getFactures() | orderBy:'-date' | filter:searchField">
-				<td><a href="#!/facturesrecues/{{facture.id}}">Fac. {{ getCategoryCode(facture.categorie) + facture.id }}</a></td>
+				<td><a href="#!/facturesrecues/{{facture.id}}">Fac. {{ facture.facture_number }}</a></td>
 				<td>{{ facture.nom_entreprise }}</td>
 				<td>{{ facture.date | date }}</td>
 				<td>{{ facture.date_paiement | date }}</td>
