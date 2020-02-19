@@ -5,7 +5,9 @@ angular.module('picsousApp').controller('NavCtrl', function($scope, casConnectio
 	
 	$scope.logout = function() {
 		// Fonction pour déconnecter l'utilisateur
-		serviceAjax.get('auth/logout')
+		serviceAjax.get('auth/logout').then(function(){
+			window.location.href = "https://cas.utc.fr/cas/logout"
+		})
 	};
 
 	$scope.showAllSemesters = function() { semester.setSemester('all'); };
