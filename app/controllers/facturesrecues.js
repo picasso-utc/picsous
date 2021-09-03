@@ -2,7 +2,7 @@
 
 angular.module('picsousApp').controller('FacturesRecuesCtrl', function (API_URL, $scope, tva, message, serviceAjax, dateWrapper, objectStates, casConnectionCheck) {
   $scope.cas = casConnectionCheck
-  $scope.facturesUrl = API_URL + '/treso/excel/factures' 
+  $scope.facturesUrl = API_URL + '/treso/excel/factures'
   $scope.tva = tva
   $scope.factures = []
   $scope.filters = {
@@ -85,31 +85,34 @@ angular.module('picsousApp').controller('FacturesRecuesCtrl', function (API_URL,
 		var newFacture = angular.copy($scope.newFacture);
 		var prixHT = newFacture.prix - newFacture.tva_complete;
 		var pourcentage_tva = (newFacture.tva_complete / prixHT) * 100;
-		
 
-		if (isFinite(pourcentage_tva)) {
-			newFacture.tva = pourcentage_tva.toFixed(2);
-			newFacture.date = dateWrapper.DateToStringDate(newFacture.date);
-			if (newFacture.date_paiement) {
-				newFacture.date_paiement = dateWrapper.DateToStringDate(newFacture.date_paiement);
-			}
-			if (newFacture.date_remboursement) {
-				newFacture.date_remboursement = dateWrapper.DateToStringDate(newFacture.date_remboursement);
-			}
-			
-			delete newFacture.tva_complete;
-			serviceAjax.post('facture/recue/', newFacture).then(function(response) {
-				$scope.factures.push(response.data);
-				$scope.newFacture = {};
-				if (!keep) {
-					$scope.addingFacture = false;
+		try{
+			if (isFinite(pourcentage_tva)) {
+				newFacture.tva = pourcentage_tva.toFixed(2);
+				newFacture.date = dateWrapper.DateToStringDate(newFacture.date);
+				if (newFacture.date_paiement) {
+					newFacture.date_paiement = dateWrapper.DateToStringDate(newFacture.date_paiement);
 				}
-				message.success('Facture bien ajoutée !');
-			});
-		} else {
-			message.error('Pourcentage TVA aberrant ! ')
+				if (newFacture.date_remboursement) {
+					newFacture.date_remboursement = dateWrapper.DateToStringDate(newFacture.date_remboursement);
+				}
+
+				delete newFacture.tva_complete;
+				serviceAjax.post('facture/recue/', newFacture).then(function(response) {
+					$scope.factures.push(response.data);
+					$scope.newFacture = {};
+					if (!keep) {
+						$scope.addingFacture = false;
+					}
+					message.success('Facture bien ajoutée !');
+				});
+			} else {
+				message.error('Pourcentage TVA aberrant ! ')
+			}
+		}catch(e){
+			message.error('Vérifiez que vous avez bien rempli tous les champs! Si le problème persiste contactez un administrateur ')
 		}
-			
+
 	};
 
 	$scope.modifyState = function(fac) {
