@@ -104,6 +104,12 @@ angular.module('picsousApp').controller('FactureRecueCtrl', function($routeParam
 			var newFacture = angular.copy($scope.facture);
 			delete newFacture.new_tva;
 			delete newFacture.cheque_set;
+			if (newFacture.date_paiement == ""){
+				newFacture.date_paiement=null
+			}
+			if (newFacture.date_remboursement==""){
+				newFacture.date_remboursement = null
+			}
 			serviceAjax.put('facture/recue/' + $routeParams.id + '/', newFacture).then(function() {
 				$scope.modifyingFacture = false;
 				message.success('Facture bien modifiée !');
@@ -111,7 +117,7 @@ angular.module('picsousApp').controller('FactureRecueCtrl', function($routeParam
 		} else {
 			message.error('Pourcentage TVA aberrant ! ')
 		}
-		
+
 	};
 
 	$scope.addCheque = function() {
